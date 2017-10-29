@@ -2,7 +2,8 @@ void loop()
 {
   if (debug)
   {
-    if(Serial.available()){
+    if(Serial.available())
+    {
     ch=Serial.readString();
     if(ch)
     
