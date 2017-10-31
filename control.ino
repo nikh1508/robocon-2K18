@@ -13,30 +13,42 @@
 //}
 
 void control(int angle)
-{ pmagnitude = pmagnitude * ra + cmagnitude* (1 - ra);
- 
-  pwmA = pmagnitude * cos(0.0176 * (0.00 - angle));
-  pwmB = pmagnitude * cos(0.0176 * (90.00 - angle));
-  pwmC = pmagnitude * cos(0.0176 * (180.00 - angle));
-  pwmD = pmagnitude * cos(0.0176 * (90- angle));
+{ 
+  pwmA = magnitude * cos(0.0176 * (0.00 - angle));
+  pwmB = magnitude * cos(0.0176 * (90.00 - angle));
+  pwmC = magnitude * cos(0.0176 * (180.00 - angle));
+  pwmD = magnitude * cos(0.0176 * (90- angle));
   motorA(pwmA - fpw);
   motorB(pwmB - fpw);
   motorC(pwmC - fpw);
   motorD(pwmD - fpw);
+  
+ 
+}
+
+void control2(int angle)
+{ 
+  pwmA = magnitude1 * cos(0.0176 * (0.00 - angle));
+  pwmB = magnitude2 * cos(0.0176 * (90.00 - angle));
+  pwmC = magnitude1 * cos(0.0176 * (180.00 - angle));
+  pwmD = magnitude2 * cos(0.0176 * (90- angle));
+  motorA(pwmA - fpw);
+  motorB(pwmB - fpw);
+  motorC(pwmC - fpw);
+  motorD(pwmD - fpw);
+  
+ 
 }
 void motor_off()
 {
-  motorA(0);
-  motorB(0);
-  motorC(0);
-  motorD(0);
+ s1.motor(2,0);
+s1.motor(1,0);
+s2.motor(2,0);
+s2.motor(1,0);
 }
-void intial_motion()
-{       control(270);
-        delay(2500);
-        control(270+45);
-        delay(1000);
-        control(0);
-        delay(200);
-        motor_off();
+void skim_motion()
+{   
+       magnitude1=7;
+       magnitude2=5;
+       control2(45);
   }

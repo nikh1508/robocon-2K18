@@ -1,28 +1,15 @@
 void motorA(int t)
-{
-  t= constrain(t,-lim, lim);
-  int var = map(t, 100, -100, 128, 255);
-  Serial3.write(var);
-  delay(1); 
+{s2.motor(2,map(constrain(pwmA,-lim,lim), 100, -100, -127,127)); 
 }
 void motorB(int t)
 {
- t= constrain(t,-lim, lim);
- int var = map(t, 100, -100, 1,127);
-  Serial2.write(var);
-    delay(1); 
+s1.motor(1,map(constrain(pwmB,-lim,lim), 100, -100, -127,127)); 
 }
 void motorD(int t)
-{
-  t= constrain(t,-lim, lim);
-  int var = map(t, 100, -100, 128, 255);
-  Serial2.write(var);
-    delay(1); 
+{ 
+  s1.motor(2,map(constrain(pwmD,-lim,lim), 100, -100, -127,127));
 }
 void motorC(int t)
 {
-  t= constrain(t,-lim, lim);
-  int var = map(t, 100, -100, 127, 1);
-  Serial3.write(var);
-    delay(1); 
+  s2.motor(1,map(constrain(pwmC,-lim,lim), 100, -100, 127,-127));
 }//5 6 7 pwm 6
