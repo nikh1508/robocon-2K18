@@ -1,3 +1,7 @@
+//Front Wheel if this T-Drive was drive by a Hercules and the two differential wheels by Sabertooth
+//Use Arduino BT Joystick App from Playstore
+
+
 int h1=13, h2=11, he=12;
 
 int pwm = 0;
