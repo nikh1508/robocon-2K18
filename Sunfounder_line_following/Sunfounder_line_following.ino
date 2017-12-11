@@ -1,6 +1,6 @@
-#include<Wire.h>
+ is#include<Wire.h>
 word data[8];
-word min_data[8]={65534,65534,65534,65534,65534,65534,65534,65534};//it pointless
+word min_data[8]={65534,65534,65534,65534,65534,65534,65534,65534};//it is pointless
 word max_data[8]={0,0,0,0,0,0,0,0};
 word thre_data[8];/// once the thresold for a system is form no need of max and min
 byte ddata[8];
