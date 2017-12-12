@@ -1,3 +1,5 @@
+
+
 /*
  * Made by SRM Team Robocon
  * Robocon-2018
@@ -14,9 +16,15 @@
 
 #define limit 0                                                               //****Check this limit before uploading the Code****
 #define debug false
-
+#define BNO055_SAMPLERATE_DELAY_MS (100)
 #include <Sabertooth.h>
 
+
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
+Adafruit_BNO055 bno = Adafruit_BNO055();
 Sabertooth saber(128, Serial3);
 
 int i, j;

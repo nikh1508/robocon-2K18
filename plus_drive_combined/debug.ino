@@ -1,10 +1,10 @@
-int opt, a,dly = 1000;
+int opt, a, dly = 1000;
 String str1, str2 = "o";
-String s1,s2,s3;
+String s1, s2, s3;
 void call_debug()
 {
   //Main-Menu Options
- Serial.println("Bot is in Debug Mode.\n***Maake Sure the Serial Montor is in \"No Line Ending\" Mode.\n\n Please Choose from the options below.\n\t1. Motor Testing\n\t2. Photoswitch Testing\n\t3.Bump-Switch Testing\n\tLauncher Testing\nPls Enter(1-4):");
+  Serial.println("Bot is in Debug Mode.\n***Maake Sure the Serial Montor is in \"No Line Ending\" Mode.\n\n Please Choose from the options below.\n\t1. Motor Testing\n\t2. Photoswitch Testing\n\t3.BNO Testing\n\t4.Launcher Testing\nPls Enter(1-4):");
   opt = Serial.parseInt();
   switch (opt)
   {
@@ -12,9 +12,10 @@ void call_debug()
       motor_testing();                                              //All the Tests related to Drive Motors
       break;
     case 2:
-    photoswitch_testing();                                          //Test all photoSwitchs
+      photoswitch_testing();                                          //Test all photoSwitchs
       break;
     case 3:
+      BNO_testing();                                                  //Test BNO055 Readings
       break;
     case 4:
       break;
@@ -71,7 +72,7 @@ tag2: for (int i = 0; i < 2; i++)
       }
       break;
 
-      case 3:
+    case 3:
       call_debug();
       break;
     default:
@@ -83,71 +84,84 @@ tag2: for (int i = 0; i < 2; i++)
 void photoswitch_testing()
 {
   Serial.println("**Entering photoswitch testing mode**");
-  tag3: Serial.println("Choose from the below options:\n1.All Switches Reading \n 2.Individual Readings\n3.Main Menu\nPls Enter(1-3)");
-  opt=Serial.parseInt();
-  switch(opt)
+tag3: Serial.println("Choose from the below options:\n1.All Switches Reading \n 2.Individual Readings\n3.Main Menu\nPls Enter(1-3)");
+  opt = Serial.parseInt();
+  switch (opt)
   {
     case 1:
-    Serial.println("**Displaying Reading from all Senors   Press 's' to stop and return to Main Menu**");
-    while(s1!='s')
-    {
-      s1=Serial.read();
-      if(s1=='s')
-      goto tag3;
-      
-      else
+      Serial.println("**Displaying Reading from all Senors   Press 's' to stop and return to Main Menu**");
+      while (s1 != 's')
       {
-      Serial.println(String(digitalRead(bot.photo[0])) + " " + String(digitalRead(bot.photo[1])) + " " +  String(digitalRead(bot.photo[2])));
-     // Serial.println("*************************************");
-      delay(100);
+        s1 = Serial.read();
+        if (s1 == 's')
+          goto tag3;
+
+        else
+        {
+          Serial.println(String(digitalRead(bot.photo[0])) + " " + String(digitalRead(bot.photo[1])) + " " +  String(digitalRead(bot.photo[2])));
+          // Serial.println("*************************************");
+          delay(100);
+        }
       }
-    }
-   
-    break;
+
+      break;
 
     case 2:
-    Serial.println("Choose which photoswitch reading you want \n1.Switch 1\t2.Switch 2\t3.Switch 3");
-    a=Serial.parseInt();
-    switch(a)
-    {
-      case 1:
-      while(s2!='s')
+      Serial.println("Choose which photoswitch reading you want \n1.Switch 1\t2.Switch 2\t3.Switch 3");
+      a = Serial.parseInt();
+      switch (a)
       {
-      s2=Serial.readString();
-      Serial.println(digitalRead(bot.photo[0]));
-      }
-      break;
+        case 1:
+          while (s2 != 's')
+          {
+            s2 = Serial.readString();
+            Serial.println(digitalRead(bot.photo[0]));
+          }
+          break;
 
-      case 2:
-      while(s2!='s')
-      {
-      s2=Serial.readString();
-      Serial.println(digitalRead(bot.photo[1]));
-      }
-      break;
+        case 2:
+          while (s2 != 's')
+          {
+            s2 = Serial.readString();
+            Serial.println(digitalRead(bot.photo[1]));
+          }
+          break;
 
-      case 3:
-      while(s2!='s')
-      {
-      s2=Serial.readString();
-      Serial.println(digitalRead(bot.photo[2]));
+        case 3:
+          while (s2 != 's')
+          {
+            s2 = Serial.readString();
+            Serial.println(digitalRead(bot.photo[2]));
+          }
+          break;
+
+
       }
+
       break;
-      
-    
-    }
-   
-    break;
 
     case 3:
-    call_debug();
-    break;
+      call_debug();
+      break;
 
     default:
-    Serial.println("Wrong Option.Try Again");
-    goto tag3;
-    
-    
+      Serial.println("Wrong Option.Try Again");
+      goto tag3;
   }
 }
+
+void BNO_testing()
+{
+  
+   Serial.println("Send any character to return to Main Menu.");
+      delay(1000);
+      Serial.println("Displaying BNO Data:");
+tag4: Serial.println("X=" + String(get_angle('x')) + "     " + "Y=" + String(get_angle('y')) + "     " + "Z=" + String(get_angle('z')));
+      if (Serial.available()) {
+        Serial.flush();
+        call_debug();
+      }
+      else goto tag4;
+}
+
 
