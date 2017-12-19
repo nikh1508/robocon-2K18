@@ -1,0 +1,14 @@
+Drive:
+
+Sabertooth - Serial3 (tx, rx) -> (14, 15)
+Relay1 - 29
+Relay2 - 27
+Bluetooth - Serial0
+Drive Photoswitch - A0 - A3
+Sunfounder array - ??? Needs i2c mux
+
+Throwing:
+
+Photoswitch - 1 -> 53, 2 -> 51, 3 -> 49
+Hercules - 13, 12, 11 (Logic1, PWM, Logic2)
+
