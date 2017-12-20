@@ -1,3 +1,5 @@
+//-------------------------------------------------------------------------Drive Motor Functions------------------------------------------------------------------------------------------
+
 void motorA(int t)
 {
   saber.motor(1, map(constrain(t, -limit, limit), 100, -100, -127, 127));
@@ -42,3 +44,34 @@ void switch_axis(char ch)
         digitalWrite(bot.relay[i], LOW);
   }
 }
+
+//--------------------------------------------------------------------------Launcher Motor & Sensor Functions-----------------------------------------------------------------------------
+
+void laun_ccw(int spd)
+{
+digitalWrite(bot.launcher[0],1);
+digitalWrite(bot.launcher[2],0);
+analogWrite(bot.launcher[1],spd);
+}
+
+void laun_cw(int spd)
+{
+digitalWrite(bot.launcher[0],0);
+digitalWrite(bot.launcher[2],1);
+analogWrite(bot.launcher[1],spd);
+}
+
+void laun_brak()
+{
+digitalWrite(bot.launcher[0],0);
+digitalWrite(bot.launcher[2],0);
+analogWrite(bot.launcher[1],0);
+}
+
+void laun_brakF()
+{
+digitalWrite(bot.launcher[0],1);
+digitalWrite(bot.launcher[2],1);
+analogWrite(bot.launcher[1],0);
+}
+
