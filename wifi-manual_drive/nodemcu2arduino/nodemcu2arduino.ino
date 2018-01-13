@@ -1,36 +1,43 @@
-BLYNK_CONNECTED() {
-  Blynk.syncAll();
+#define BLYNK_PRINT Serial
+
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+
+BlynkTimer timer_event;
+
+char auth[] = "cb6b5198a212417e9578367af827cb85";
+
+char ssid[] = "Robocon";
+char pass[] = "whatpassword";
+
+char x, y, button, slider, trm_data;
+float trm;
+
+void send_data(char point, char data) {
+  Serial.print('s');
+  Serial.print(point);
+  Serial.print(data);
 }
 
-BLYNK_APP_CONNECTED(){
- Blynk.syncAll();
- }
-
- BLYNK_APP_DISCONNECTED(){
-  initialize_default();
-  }
-
-BLYNK_WRITE(V0) {
-  y = param[0].asInt();
+void update_data() {
+  send_data('x', x);
+  send_data('y', y);
+  send_data('p', button);
+  send_data('l', slider);
+  send_data('t', trm_data);
 }
 
-
-BLYNK_WRITE(V1) {
-  x = param[1].asInt();
+void setup()
+{
+  // Debug console
+  Serial.begin(9600);
+  Blynk.begin(auth, ssid, pass, IPAddress(192, 168, 0, 108), 8442);
+  timer_event.setInterval(70L, update_data);
 }
 
-BLYNK_WRITE(V2) {
-  button = param.asInt();
-  //Serial.println("Button::"+String(button));
-}
-
-BLYNK_WRITE(V3) {
-  slider = param.asInt();
-  //Serial.println("Slider::"+String(slider));
-}
-
-BLYNK_WRITE(V4) {
-  trm = (param.asFloat())*1024;
-  trm_data = map(trm, -1024, 1024, 0, 255);
-  //Serial.println("Trim::"+String(trm));
+void loop()
+{
+  Blynk.run();
+  timer_event.run();
 }
