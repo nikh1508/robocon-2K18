@@ -3,12 +3,12 @@
 #define accel bot_data.y
 #define turn bot_data.x
 
-SoftwareSerial bot(7, 6); //RX,TX
+SoftwareSerial bot(A0, A1); //RX,TX
 
-constexpr int M1_PWM = 10;
-constexpr int M1_DIR = 12;
-constexpr int M2_PWM = 11;
-constexpr int M2_DIR = 13;
+constexpr int M1_PWM = 11;
+constexpr int M1_DIR = 13;
+constexpr int M2_PWM = 10;
+constexpr int M2_DIR = 12;
 
 int nodata_count = 0;
 
@@ -42,7 +42,7 @@ void disp() {
 bool update_data() {
   bool didchange = false;
   if (read() == 's') {
-    
+
     byte type = read();
     if (!(type == 'x' || type == 'y' || type == 'l' || type == 'p' || type == 't')) return didchange;
     byte val = read();
@@ -77,16 +77,18 @@ bool update_data() {
 void calc() {
   int L, R;
 
-  
+
 
   L = map(bot_data.y, 0, 255, -bot_data.slider, +bot_data.slider);
   R = L;
 
-  if (bot_data.y == 128) { L = R = 0; }
- 
-//  Serial.print("L="); Serial.print(L); Serial.print(" ");
-//  Serial.print("R="); Serial.println(R);
-//  
+  if (bot_data.y == 128) {
+    L = R = 0;
+  }
+
+  //  Serial.print("L="); Serial.print(L); Serial.print(" ");
+  //  Serial.print("R="); Serial.println(R);
+  //
 
   if (bot_data.t < 127) {
     int percent = map(bot_data.t, 0, 128, 0, 100);
@@ -107,24 +109,24 @@ void calc() {
   }
 
 
- 
-  
-//    Serial.print("L="); Serial.print(L); Serial.print(" ");
-//  Serial.print("R="); Serial.println(R);
+
+
+  //    Serial.print("L="); Serial.print(L); Serial.print(" ");
+  //  Serial.print("R="); Serial.println(R);
 
   update_L(L);
   update_R(R);
 }
 
 void update_L(int pwm) {
-  int dir = (pwm<0)?LOW:HIGH;
+  int dir = (pwm < 0) ? LOW : HIGH;
   pwm = abs(pwm);
 
-    digitalWrite(M1_DIR, dir);
-    digitalWrite(M1_PWM, abs(pwm));
-    motor_data.pwm1 = pwm;
-    motor_data.dir1 = dir;
-  
+  digitalWrite(M1_DIR, dir);
+  analogWrite(M1_PWM, abs(pwm));
+  motor_data.pwm1 = pwm;
+  motor_data.dir1 = dir;
+
 }
 
 void disp_motor() {
@@ -139,33 +141,33 @@ void disp_motor() {
 }
 
 void update_R(int pwm) {
-  int dir = (pwm<0)?LOW:HIGH;
+  int dir = (pwm > 0) ? LOW : HIGH;                       
   pwm = abs(pwm);
- 
-    digitalWrite(M2_DIR, dir);
-    digitalWrite(M2_PWM, abs(pwm));
-    motor_data.pwm2 = pwm;
-    motor_data.dir2 = dir;
-  
-}
 
+  digitalWrite(M2_DIR, dir);
+  analogWrite(M2_PWM, abs(pwm));
+  motor_data.pwm2 = pwm;
+  motor_data.dir2 = dir;
+
+}
+void motors_shutdown() {
+  update_L(0);
+  update_R(0);
+}
 void loop() {
 
   if (nodata_count > 5000)
   {
     bot_data.power = 0;
-    //motors_shutdown();
+    motors_shutdown();
     Serial.println("Arduino is disconnected via Serial. Check Connection");
     while (!bot.available());
   }
 
-  
   update_data();
-  calc();
-  disp_motor();
-
-
-  
-
-
+  if (bot_data.power)calc();
+  else motors_shutdown();
+  //disp_motor();
 }
+
+
