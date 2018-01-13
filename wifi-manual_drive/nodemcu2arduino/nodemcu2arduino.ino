@@ -14,6 +14,13 @@ char pass[] = "whatpassword";
 char x, y, button, slider, trm_data;
 float trm;
 
+void initialize_default() {
+  x = y = 128;
+  button = 0;
+  slider = 0;
+  trm_data = 127;
+}
+
 void send_data(char point, char data) {
   Serial.print('s');
   Serial.print(point);
