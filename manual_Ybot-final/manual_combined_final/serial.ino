@@ -18,7 +18,7 @@ bool update_data() {
     receiving_data = true;
     while (receiving_data) {
       byte type = read();
-      if (!(type == 'p' || type == 'f' || type == 'b' || type == 'l' || type == 'r' || type == 'o' || type == 'c' || type == 'd'))continue;
+      if (!(type == 'p' || type == 'f' || type == 'b' || type == 'l' || type == 'r' || type == 'o' || type == 'c' || type == 'd' || type == 'v' || type == 'w' || type == 'x' || type == 'y'))continue;
       byte val = read();
       switch (type) {
         case 'p':
@@ -66,6 +66,30 @@ bool update_data() {
           if (bot_data.power != val) didchange = true;
           bot_data.power = val;
           break;
+        case 'v':
+          if (bot_data.dcv_l != val) didchange = true;
+          bot_data.dcv_l = val;
+          if (bot_data.dcv_l)
+            bot_data.pneumatic = 1;
+          break;
+        case 'w':
+          if (bot_data.dcv_r != val) didchange = true;
+          bot_data.dcv_r = val;
+          if (bot_data.dcv_r)
+            bot_data.pneumatic = 1;
+          break;
+        case 'x':
+          if (bot_data.belt_l != val) didchange = true;
+          bot_data.belt_l = val;
+          if (bot_data.belt_l)
+            bot_data.pneumatic = 2;
+          break;
+        case 'y':
+          if (bot_data.belt_r != val) didchange = true;
+          bot_data.belt_r = val;
+          if (bot_data.belt_r)
+            bot_data.pneumatic = 2;
+          break;
       }
     }
     return didchange;
@@ -82,5 +106,10 @@ void print_recv_data() {
   Serial.print("CCW:" + String(bot_data.ccw)); Serial.print("\t");
   Serial.print("S:" + String(bot_data.slider)); Serial.print("\t");
   Serial.print("M:" + String(bot_data.motion)); Serial.print("\t");
+  Serial.print("DV_L:" + String(bot_data.dcv_l)); Serial.print("\t");
+  Serial.print("DV_R:" + String(bot_data.dcv_r)); Serial.print("\t");
+  Serial.print("BT_L:" + String(bot_data.belt_l)); Serial.print("\t");
+  Serial.print("BT_R:" + String(bot_data.belt_r)); Serial.print("\t");
+  Serial.print("PN:" + String(bot_data.pneumatic)); Serial.print("\t");
   Serial.println("P:" + String(bot_data.power));
 }

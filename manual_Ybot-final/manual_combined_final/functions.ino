@@ -22,8 +22,13 @@ double get_angle(char axis) {
 }
 
 void check_motion() {
-  if (!(bot_data.fwd || bot_data.bkd || bot_data.left || bot_data.right || bot_data.cw || bot_data.ccw))
+  if (!(bot_data.fwd || bot_data.bkd || bot_data.left || bot_data.right || bot_data.cw || bot_data.ccw ))
     bot_data.motion = 0;
+}
+
+void check_pneumatic() {
+  if (!(bot_data.belt_l || bot_data.belt_r || bot_data.dcv_l || bot_data.dcv_r))
+    bot_data.pneumatic = 0;
 }
 
 void redeclare_pid(double Kp, double Ki, double Kd) {
@@ -85,16 +90,16 @@ void move_right() {
 }
 
 void move_cw() {
-  pwm_l=setValue;
-  pwm_r=-setValue;
-  pwm_f=setValue;
+  pwm_l = setValue;
+  pwm_r = -setValue;
+  pwm_f = setValue;
 }
 
 void move_ccw() {
   if (bot_data.curr_motion != 6) {}
-  pwm_l=-setValue;
-  pwm_r=setValue;
-  pwm_f=-setValue;
+  pwm_l = -setValue;
+  pwm_r = setValue;
+  pwm_f = -setValue;
 }
 
 void write_motor(int f, int x, int y) {
@@ -128,4 +133,59 @@ void write_motor(int f, int x, int y) {
   analogWrite(motor.pwm_f, abs(f));
   analogWrite(motor.pwm_l, abs(x));
   analogWrite(motor.pwm_r, abs(y));
+}
+
+//--------------------------------------------------------------------------------Pneumatic Functions---------------------------------------------------------------------------------------
+void stop_pneumatic() {
+  digitalWrite(pneumatic.dcv_l_up, LOW);
+  digitalWrite(pneumatic.dcv_l_down, LOW);
+  digitalWrite(pneumatic.dcv_r_up, LOW);
+  digitalWrite(pneumatic.dcv_r_down, LOW);
+  digitalWrite(pneumatic.belt_l_pwm, LOW);
+  digitalWrite(pneumatic.belt_r_pwm, LOW);
+}
+
+void dcv() {
+  if (bot_data.dcv_l == 1) {
+    digitalWrite(pneumatic.dcv_l_up, HIGH);
+    digitalWrite(pneumatic.dcv_l_down, LOW);
+  }
+  else if (bot_data.dcv_l == 2) {
+    digitalWrite(pneumatic.dcv_l_up, LOW);
+    digitalWrite(pneumatic.dcv_l_down, HIGH);
+  }
+
+  if (bot_data.dcv_r == 1) {
+    digitalWrite(pneumatic.dcv_r_up, HIGH);
+    digitalWrite(pneumatic.dcv_r_down, LOW);
+  }
+  else if (bot_data.dcv_r == 2) {
+    digitalWrite(pneumatic.dcv_r_up, LOW);
+    digitalWrite(pneumatic.dcv_r_down, HIGH);
+  }
+}
+
+void belt() {
+  if (bot_data.belt_l == 1)
+  {
+    analogWrite(pneumatic.belt_l_pwm, 80);
+    digitalWrite(pneumatic.belt_l_dir1, HIGH);
+    digitalWrite(pneumatic.belt_l_dir2, LOW);
+  }
+  else if (bot_data.belt_l == 2) {
+    analogWrite(pneumatic.belt_l_pwm, 80);
+    digitalWrite(pneumatic.belt_l_dir1, LOW);
+    digitalWrite(pneumatic.belt_l_dir2, HIGH);
+  }
+  else if (bot_data.belt_r == 1) {
+    analogWrite(pneumatic.belt_r_pwm, 120);
+    digitalWrite(pneumatic.belt_r_dir1, HIGH);
+    digitalWrite(pneumatic.belt_r_dir2, LOW);
+  }
+
+  else if (bot_data.belt_r == 2) {
+    analogWrite(pneumatic.belt_r_pwm, 120);
+    digitalWrite(pneumatic.belt_r_dir1, LOW);
+    digitalWrite(pneumatic.belt_r_dir2, HIGH);
+  }
 }
