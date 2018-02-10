@@ -34,33 +34,37 @@ void loop() {
     switch (bot_data.motion) {
       case 0:
         if (bot_data.curr_motion != 0 || updated) {
-          stop_all();
+          stop_all(bot_data.curr_motion);
           bot_data.curr_motion = 0;
         }
         break;
       case 1:
         if (bot_data.curr_motion != 1 || updated) {
           move_fwd();
+          if (bot_data.curr_motion != 1)
+            start_time = millis();
           bot_data.curr_motion = 1;
         }
         input = get_angle('x');
         pid_obj.myPID.Compute();
-        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
-        pwm_l = setValue + output;
-        pwm_l = constrain(pwm_l, -255, 255);
-        write_motor(0, pwm_l, pwm_r);
+        //        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
+        //set_l = setValue + output;
+        set_l = constrain(set_l, -255, 255);
+        write_motor(0, set_l, set_r);
         break;
       case 2:
         if (bot_data.curr_motion != 2 || updated) {
           move_bkwd();
+          if (bot_data.curr_motion != 2)
+            start_time = millis();
           bot_data.curr_motion = 2;
         }
         input = get_angle('x');
         pid_obj.myPID.Compute();
-        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
-        pwm_l = -setValue + output;
-        pwm_l = constrain(pwm_l, -255, 255);
-        write_motor(0, pwm_l, pwm_r);
+        //        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
+        set_l = -setValue + output;
+        set_l = constrain(set_l, -255, 255);
+        write_motor(0, set_l, set_r);
         break;
       case 3:
         if (bot_data.curr_motion != 3 ) {
@@ -70,9 +74,9 @@ void loop() {
         input = get_angle('x');
         pid_obj.myPID.Compute();
         Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
-        pwm_f = -11 + output;
-        pwm_f = constrain(pwm_f, -255, 255);
-        write_motor(pwm_f, pwm_l, pwm_r);
+        set_f = -15 + output;
+        set_f = constrain(set_f, -120, 120);
+        write_motor(set_f, set_l, set_r);
         Serial.println("--------------------------------------------");
         break;
       case 4:
@@ -82,28 +86,28 @@ void loop() {
         }
         input = get_angle('x');
         pid_obj.myPID.Compute();
-        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
-        pwm_f = 11 + output;
-        pwm_f = constrain(pwm_f, -255, 255);
-        write_motor(pwm_f, pwm_l, pwm_r);
-        Serial.println("--------------------------------------------");
+        //        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
+        set_f = 15 + output;
+        set_f = constrain(set_f, -120, 120);
+        write_motor(set_f, set_l, set_r);
+        //        Serial.println("--------------------------------------------");
         break;
       case 5:
         if (bot_data.curr_motion != 5 || updated) {
           move_cw();
           bot_data.curr_motion = 5;
         }
-        write_motor(pwm_f, pwm_l, pwm_r);
+        write_motor(set_f, set_l, set_r);
         break;
       case 6:
         if (bot_data.curr_motion != 6 || updated) {
           move_ccw();
           bot_data.curr_motion = 6;
         }
-        write_motor(pwm_f, pwm_l, pwm_r);
+        write_motor(set_f, set_l, set_r);
         break;
       default:
-        stop_all();
+        stop_all(0);
         break;
     }
     switch (bot_data.pneumatic) {

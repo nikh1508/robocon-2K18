@@ -38,8 +38,61 @@ void redeclare_pid(double Kp, double Ki, double Kd) {
 }
 //----------------------------------------------------------------------Motor Functions--------------------------------------------------------------------------
 
-void stop_all() {
-  write_motor(0, 0, 0);
+void stop_all(int x) {
+
+  unsigned long curr_time = millis() - start_time;
+  switch (x) {
+    case 0:
+      write_motor(0, 0, 0);
+      break;
+    case 1:
+//      for (int i = 0; i <= setValue; i++) {
+//        write_motor(0, -i - (i / 2), -i);
+//        delay(4);
+//      }
+
+      while(set_l>0 || set_r>0){
+        set_l-=set_l*deacc;
+        set_l=constrain(set_l,0,255);
+        set_r-=set_r*deacc;
+        set_r=constrain(set_r,0,255);
+        write_motor(0,set_l,set_r);
+        }
+      //      Serial.print(start_time);
+      //      Serial.print("\t");
+      //      Serial.print(millis());
+      //      Serial.print("\t");
+      //      Serial.println(curr_time);
+      write_motor(0, 0, 0);
+      break;
+    case 2:
+      for (int i = 0; i <= setValue; i++) {
+        write_motor(0, i + (i / 2), i);
+        delay(4);
+      }
+      //      Serial.print(start_time);
+      //      Serial.print("\t");
+      //      Serial.print(millis());
+      //      Serial.print("\t");
+      //      Serial.println(curr_time);
+      if (curr_time > 800)
+        delay(400);
+      write_motor(0, 0, 0);
+      break;
+    case 3:
+      write_motor(5, -7, 4);
+      delay(400);
+      write_motor(0, 0, 0);
+      break;
+    case 4:
+      write_motor(-5, 7, -4);
+      delay(400);
+      write_motor(0, 0, 0);
+      break;
+    default:
+      write_motor(0, 0, 0);
+      break;
+  }
 }
 
 void move_fwd() {
@@ -50,7 +103,7 @@ void move_fwd() {
     output = 0.0;
     redeclare_pid(pid_mat[0][0], pid_mat[0][1], pid_mat[0][2]);
   }
-  pwm_l = pwm_r = setValue;
+  set_l = set_r = setValue;
 }
 
 void move_bkwd() {
@@ -61,9 +114,9 @@ void move_bkwd() {
     output = 0.0;
     redeclare_pid(pid_mat[0][0], pid_mat[0][1], pid_mat[0][2]);
     //myPID.SetZero();
-    Serial.println("here..");
+    //    Serial.println("here..");
   }
-  pwm_l = pwm_r = -setValue;
+  set_l = set_r = -setValue;
 }
 
 void move_left() {
@@ -72,10 +125,10 @@ void move_left() {
   setpoint = get_angle('x');
   output = 0.0;
   redeclare_pid(pid_mat[1][0], pid_mat[1][1], pid_mat[1][2]);
-  Serial.println("here..");
-  pwm_l = 15;
-  pwm_r = -15;
-  pwm_f = -15;
+  //  Serial.println("here..");
+  set_l = 25;
+  set_r = -15;
+  set_f = 0;
 }
 
 void move_right() {
@@ -84,22 +137,22 @@ void move_right() {
   setpoint = get_angle('x');
   output = 0.0;
   redeclare_pid(pid_mat[2][0], pid_mat[2][1], pid_mat[2][2]);
-  pwm_l = -15;
-  pwm_r = 15;
-  pwm_f = 15;
+  set_l = -25;
+  set_r = 20;
+  set_f = 0;
 }
 
 void move_cw() {
-  pwm_l = setValue;
-  pwm_r = -setValue;
-  pwm_f = setValue;
+  set_l = 15;
+  set_r = -15;
+  set_f = 15;
 }
 
 void move_ccw() {
   if (bot_data.curr_motion != 6) {}
-  pwm_l = -setValue;
-  pwm_r = setValue;
-  pwm_f = -setValue;
+  set_l = -15;
+  set_r = 15;
+  set_f = -15;
 }
 
 void write_motor(int f, int x, int y) {
@@ -112,80 +165,72 @@ void write_motor(int f, int x, int y) {
   Serial.print("L_PWM::"); Serial.print(x); Serial.print("\t");
   Serial.print("R_PWM::"); Serial.println(y);
 
-  digitalWrite(motor.dir_l, x < 0);
-  digitalWrite(motor.dir_r, y < 0);
+  digitalWrite(dir_l, x > 0);
+  digitalWrite(dir_r, y > 0);
   if (f == 0)
   {
-    digitalWrite(motor.dir_f1, 1);
-    digitalWrite(motor.dir_f2, 1);
+    digitalWrite(dir_f1, 1);
+    digitalWrite(dir_f2, 1);
   }
-  else if (f < 0)
-  {
-    digitalWrite(motor.dir_f1, 0);
-    digitalWrite(motor.dir_f2, 1);
-
-  }
-  else
-  {
-    digitalWrite(motor.dir_f1, 1);
-    digitalWrite(motor.dir_f2, 0);
-  }
-  analogWrite(motor.pwm_f, abs(f));
-  analogWrite(motor.pwm_l, abs(x));
-  analogWrite(motor.pwm_r, abs(y));
+  digitalWrite(dir_f1, f > 0);
+  digitalWrite(dir_f2, f < 0);
+  //
+  analogWrite(pwm_f, abs(f));
+  analogWrite(pwm_l, abs(x));
+  analogWrite(pwm_r, abs(y));
 }
 
 //--------------------------------------------------------------------------------Pneumatic Functions---------------------------------------------------------------------------------------
 void stop_pneumatic() {
-  digitalWrite(pneumatic.dcv_l_up, LOW);
-  digitalWrite(pneumatic.dcv_l_down, LOW);
-  digitalWrite(pneumatic.dcv_r_up, LOW);
-  digitalWrite(pneumatic.dcv_r_down, LOW);
-  digitalWrite(pneumatic.belt_l_pwm, LOW);
-  digitalWrite(pneumatic.belt_r_pwm, LOW);
+  digitalWrite(dcv_l_up, LOW);
+  digitalWrite(dcv_l_down, LOW);
+  digitalWrite(dcv_r_up, LOW);
+  digitalWrite(dcv_r_down, LOW);
+  digitalWrite(belt_l_pwm, LOW);
+  digitalWrite(belt_r_pwm, LOW);
 }
 
 void dcv() {
   if (bot_data.dcv_l == 1) {
-    digitalWrite(pneumatic.dcv_l_up, HIGH);
-    digitalWrite(pneumatic.dcv_l_down, LOW);
+    digitalWrite(dcv_l_up, HIGH);
+    digitalWrite(dcv_l_down, LOW);
   }
   else if (bot_data.dcv_l == 2) {
-    digitalWrite(pneumatic.dcv_l_up, LOW);
-    digitalWrite(pneumatic.dcv_l_down, HIGH);
+    digitalWrite(dcv_l_up, LOW);
+    digitalWrite(dcv_l_down, HIGH);
   }
 
   if (bot_data.dcv_r == 1) {
-    digitalWrite(pneumatic.dcv_r_up, HIGH);
-    digitalWrite(pneumatic.dcv_r_down, LOW);
+    digitalWrite(dcv_r_up, HIGH);
+    digitalWrite(dcv_r_down, LOW);
   }
   else if (bot_data.dcv_r == 2) {
-    digitalWrite(pneumatic.dcv_r_up, LOW);
-    digitalWrite(pneumatic.dcv_r_down, HIGH);
+    digitalWrite(dcv_r_up, LOW);
+    digitalWrite(dcv_r_down, HIGH);
   }
 }
 
 void belt() {
   if (bot_data.belt_l == 1)
   {
-    analogWrite(pneumatic.belt_l_pwm, 80);
-    digitalWrite(pneumatic.belt_l_dir1, HIGH);
-    digitalWrite(pneumatic.belt_l_dir2, LOW);
+    analogWrite(belt_l_pwm, 80);
+    digitalWrite(belt_l_dir1, HIGH);
+    digitalWrite(belt_l_dir2, LOW);
   }
   else if (bot_data.belt_l == 2) {
-    analogWrite(pneumatic.belt_l_pwm, 80);
-    digitalWrite(pneumatic.belt_l_dir1, LOW);
-    digitalWrite(pneumatic.belt_l_dir2, HIGH);
+    analogWrite(belt_l_pwm, 80);
+    digitalWrite(belt_l_dir1, LOW);
+    digitalWrite(belt_l_dir2, HIGH);
   }
   else if (bot_data.belt_r == 1) {
-    analogWrite(pneumatic.belt_r_pwm, 120);
-    digitalWrite(pneumatic.belt_r_dir1, HIGH);
-    digitalWrite(pneumatic.belt_r_dir2, LOW);
+    analogWrite(belt_r_pwm, 120);
+    digitalWrite(belt_r_dir1, HIGH);
+    digitalWrite(belt_r_dir2, LOW);
   }
 
   else if (bot_data.belt_r == 2) {
-    analogWrite(pneumatic.belt_r_pwm, 120);
-    digitalWrite(pneumatic.belt_r_dir1, LOW);
-    digitalWrite(pneumatic.belt_r_dir2, HIGH);
+    analogWrite(belt_r_pwm, 120);
+    digitalWrite(belt_r_dir1, LOW);
+    digitalWrite(belt_r_dir2, HIGH);
   }
 }
