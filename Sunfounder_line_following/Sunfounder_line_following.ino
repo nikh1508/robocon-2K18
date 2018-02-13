@@ -1,4 +1,4 @@
- is#include<Wire.h>
+#include<Wire.h>
 word data[8];
 word min_data[8]={65534,65534,65534,65534,65534,65534,65534,65534};//it is pointless
 word max_data[8]={0,0,0,0,0,0,0,0};
@@ -32,11 +32,12 @@ byte error, address = 0x09;
 
 void print_array()///what about the msb bit? data[1]...probably stm has 10 bit ADC
 {
-for (int i=0; i <= 7; i++){Serial.print(data[i]);Serial.print(" d ");}Serial.println();//debug
-for (int i=0; i <= 7; i++){Serial.print(min_data[i]);Serial.print(" mn ");}Serial.println();//debug
-  for (int i=0; i <= 7; i++){Serial.print(max_data[i]);Serial.print(" mx ");}Serial.println();//debug
-  for (int i=0; i <= 7; i++){Serial.print(thre_data[i]);Serial.print(" t ");}Serial.println();//debug
-  for (int i=0; i <= 7; i++){Serial.print(ddata[i]);Serial.print(" dd ");}Serial.println();
+///for (int i=0; i <= 7; i++){Serial.print(data[i]);Serial.print(" ");}Serial.println();//debug
+Serial.println(data[0]);
+//for (int i=0; i <= 7; i++){Serial.print(min_data[i]);Serial.print(" mn ");}Serial.println();//debug
+//  for (int i=0; i <= 7; i++){Serial.print(max_data[i]);Serial.print(" mx ");}Serial.println();//debug
+//  for (int i=0; i <= 7; i++){Serial.print(thre_data[i]);Serial.print(" t ");}Serial.println();//debug
+//  for (int i=0; i <= 7; i++){Serial.print(ddata[i]);Serial.print(" dd ");}Serial.println();
   //Serial.println(ddata,BIN); 
 }
 
