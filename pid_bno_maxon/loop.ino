@@ -1,5 +1,7 @@
 bool prev_off = false;
 void loop() {
+  if (white_line)
+    wsr();
   Serial.print(get_angle('x'));
   Serial.print("\t");
   //   put your main code here, to run repeatedly:

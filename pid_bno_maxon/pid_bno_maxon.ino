@@ -17,7 +17,7 @@ struct mtr {
   int set_l = 0, set_r = 0;
 } motor;
 
-void write_motor(int x, int y, boolean ramp=false, double cnst=alpha);
+void write_motor(int x, int y, boolean ramp = false, double cnst = alpha);
 int pins[] = {11, 12, 13};
 
 double setpoint, input, output = 0.0;
@@ -61,6 +61,22 @@ long last_time;
 double last;
 int pwm_l = 0, pwm_r = 0;
 double cur_l = 0, cur_r = 0;
+bool white_line = false;
+void isr()
+{
+  white_line = true;
+}
+
+void wsr() {
+  write_motor(0, 0);
+  while (bot_data.power != 0) {
+    update_data();
+    Serial.print(bot_data.power);
+    Serial.print("\t");
+    Serial.println("here");
+  }
+  white_line = false;
+}
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
@@ -86,5 +102,7 @@ void setup() {
   saber.print("R1:0\r\n");
   saber.print("R2:0\r\n");
   //last_time = millis();
+  pinMode(2, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(2), isr, FALLING);
 }
 
