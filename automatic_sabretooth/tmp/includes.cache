@@ -1,0 +1,57 @@
+[
+  {
+    "Sourcefile": "",
+    "Include": "",
+    "Includepath": "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/cores/arduino"
+  },
+  {
+    "Sourcefile": "",
+    "Include": "",
+    "Includepath": "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/variants/mega"
+  },
+  {
+    "Sourcefile": "/Users/rishav/Documents/Arduino/automatic_sabretooth/tmp/sketch/automatic_sabretooth.ino.cpp",
+    "Include": "PID_v1.h",
+    "Includepath": "/Users/rishav/Documents/Arduino/libraries/PID"
+  },
+  {
+    "Sourcefile": "/Users/rishav/Documents/Arduino/automatic_sabretooth/tmp/sketch/automatic_sabretooth.ino.cpp",
+    "Include": "Adafruit_Sensor.h",
+    "Includepath": "/Users/rishav/Documents/Arduino/libraries/Adafruit_Sensor"
+  },
+  {
+    "Sourcefile": "/Users/rishav/Documents/Arduino/automatic_sabretooth/tmp/sketch/automatic_sabretooth.ino.cpp",
+    "Include": "Adafruit_BNO055.h",
+    "Includepath": "/Users/rishav/Documents/Arduino/libraries/Adafruit_BNO055"
+  },
+  {
+    "Sourcefile": "/Users/rishav/Documents/Arduino/automatic_sabretooth/tmp/sketch/automatic_sabretooth.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/Wire/src"
+  },
+  {
+    "Sourcefile": "/Users/rishav/Documents/Arduino/automatic_sabretooth/tmp/sketch/automatic_sabretooth.ino.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/Users/rishav/Documents/Arduino/libraries/PID/PID_v1.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/Users/rishav/Documents/Arduino/libraries/Adafruit_BNO055/Adafruit_BNO055.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/Wire/src/Wire.cpp",
+    "Include": "",
+    "Includepath": ""
+  },
+  {
+    "Sourcefile": "/Applications/Arduino.app/Contents/Java/hardware/arduino/avr/libraries/Wire/src/utility/twi.c",
+    "Include": "",
+    "Includepath": ""
+  }
+]

@@ -38,6 +38,8 @@ bool updated = false;
 double pid_mat[3][3] = {{45/ 4 , 51  / 4,  30/ 4}, { 45 / 4, 20 / 4, 6 / 4}, { 45 / 4, 20 / 4 , 6 / 4}}; //PID Constants   { 48 / 4, 15 / 4 , 3 / 4}
 int pins[] = {30, 32, 6, 36, 4, 34, 5};                             //Output Pins
 
+bool has_entered = false;
+
 struct data {
   int fwd, bkd, left, right, cw, ccw;
   int slider = 0;

@@ -31,6 +31,17 @@ void loop() {
       setValue = constrain(setValue, 0, capped_val);
     }
     else updated = false;
+
+    if (has_entered == false) {
+      if ( bot_data.curr_motion == 1 && digitalRead(photo) == HIGH) {
+        stop_all(0);
+        bot_data.curr_motion = 0;
+        bot_data.motion = 0;
+        has_entered = true;
+      }
+    }
+
+
     switch (bot_data.motion) {
       case 0:
         if (bot_data.curr_motion != 0 || updated) {
