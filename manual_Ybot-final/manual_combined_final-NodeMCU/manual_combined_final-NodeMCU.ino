@@ -23,8 +23,8 @@ BlynkTimer timer1_event;
 
 char auth[] = "f3b63e03dbaf40c7a6c377ddf9504387";
 
-char ssid[] = "Robocon";
-char pass[] = "whatpassword";
+char ssid[] = "WHSP";
+char pass[] = "11111111";
 
 char power, slider, fwd, bkd, left, right, cw, ccw, belt_r, belt_l, dcv_l, dcv_r;
 char belt_l_fwd, belt_l_rev, belt_r_fwd, belt_r_rev;
@@ -65,23 +65,23 @@ void update_data() {
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(57600);
-  Blynk.begin(auth, ssid, pass, IPAddress(192, 168, 0, 108), 8442);
+  Blynk.begin(auth, ssid, pass, IPAddress(192, 168, 43, 1), 8442);
   timer_event.setInterval(200L, update_data);
   //  timer1_event.setInterval(200L, get_data);
   //  Blynk.virtualWrite(V0, 0);
   //  Blynk.virtualWrite(V1, 0);
 }
 
-void print_recv_data(){
+void print_recv_data() {
   Serial.print("DL-" + String((int)dcv_l)); Serial.print("\t");
   Serial.print("DR-" + String((int)dcv_r)); Serial.print("\t");
   Serial.print("BL-" + String((int)belt_l)); Serial.print("\t");
   Serial.println("BR-" + String((int)belt_r));
-  }
+}
 void loop() {
   // put your main code here, to run repeatedly:
   Blynk.run();
   check_belt();
   check_dcv();
-  timer_event.run();  
+  timer_event.run();
 }
