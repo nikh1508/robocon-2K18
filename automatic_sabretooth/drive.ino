@@ -18,44 +18,41 @@ void motor1(int pwm) {
 
 void motor2(int pwm) {
 
-  if (pwm == motors.m2) return ;
+//  if (pwm == motors.m2) return ;
 
   if (pwm == BRAKE) { 
 
-//    int diff = motors.m2;
-//    int dec = diff/10.0;
-//
-//    for (int i = 0; i < 10; i++) {
-//      analogWrite(MONSTER_PWM, diff - (dec * i));
-//      delay(100);
-//    }
     
-    analogWrite(MONSTER_PWM, 0);
     digitalWrite(MONSTER_L1, HIGH);
     digitalWrite(MONSTER_L2, HIGH);
-
-    motors.m2 = BRAKE;
+    analogWrite(MONSTER_PWM, 0);
+    motors.m2 = pwm;
     return;
+  
   }
 
-  pwm = map(pwm, -2047, +2047, -255, +255);
+ // pwm = map(pwm, -2047, +2047, -255, +255);
+pwm = constrain(pwm , -255, +255);
 
-  if (motors.m2 == BRAKE) {
-    if (pwm > 0) {
+ 
+    if (pwm == 0) {
+      digitalWrite(MONSTER_L1, LOW);
+      digitalWrite(MONSTER_L2, LOW);
+    } else if (pwm > 0) {
       digitalWrite(MONSTER_L1, HIGH);
       digitalWrite(MONSTER_L2, LOW);
     } else {
       digitalWrite(MONSTER_L1, LOW);
       digitalWrite(MONSTER_L2, HIGH);
     }
-  }
+  
 
-  analogWrite(MONSTER_PWM, pwm);
-  Serial.println(pwm);
+  analogWrite(MONSTER_PWM, abs(pwm));
   motors.m2 = pwm;
 
 }
- 
+
+
 
 void motor3(int pwm) {
  

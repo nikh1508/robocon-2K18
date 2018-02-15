@@ -23,7 +23,7 @@ void ramp3(int r) {
 double get_yaw() {
   sensors_event_t event;
   bno.getEvent(&event);
-  double x = event.orientation.x;  // taking X readings
+  double x = event.orientation.x;// taking X readings
   if (x > 180)                     // to get negative angles in CCW direction
     x = (360 - x) * -1;
 //  Serial.print("yaw="); Serial.println(x);
@@ -50,11 +50,17 @@ void debug() {
 }
 
 void isr() {
-  flag = 0;
+  
+  ctr++;
 }
 
 void isr2() {
-  flag2 = 0;
+  ctr2++;
+}
+
+
+void isr3() {
+  ctr3++;
 }
 
 
