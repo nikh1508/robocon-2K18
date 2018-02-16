@@ -1,4 +1,4 @@
-void motor1(int pwm) {
+    void motor1(int pwm) {
   if (motors.m1 == pwm) return; // do nothing
 
   if (pwm == BRAKE) {
@@ -83,4 +83,5 @@ void write_motors(int f, int l, int r) {
 
 void stop_all() {
   write_motors(BRAKE, BRAKE, BRAKE);
+  delay(500);
 }
