@@ -68,7 +68,7 @@ void setup() {
   for (int pin : pins) {
     pinMode(pin, OUTPUT);
   }
-  Serial.println("Strated");
+  Serial.println("Started");
 //  for (int i = 0 ; i < 3; i++)
 //    for (int j = 0 ; j < 3; j++)
 //      Serial.println(pid_mat[i][j]);
