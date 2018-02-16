@@ -77,7 +77,7 @@ void setup() {
     Serial.print("BNO not detected. Check connections or I2C ADDR!(Run I2C Scanner in Debug Mode.)");
     while (1);
   }
-  Serial.println("Strated2");
+  Serial.println("Started2");
   bno.setExtCrystalUse(true);
   delay(1000);
   pid_obj.myPID.SetOutputLimits(-500, 500);
