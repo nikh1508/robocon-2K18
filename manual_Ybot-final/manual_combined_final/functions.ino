@@ -1,3 +1,4 @@
+
 double get_angle(char axis) {
   sensors_event_t event;
   bno.getEvent(&event);
@@ -46,18 +47,20 @@ void stop_all(int x) {
       write_motor(0, 0, 0);
       break;
     case 1:
-//      for (int i = 0; i <= setValue; i++) {
-//        write_motor(0, -i - (i / 2), -i);
-//        delay(4);
-//      }
-
-      while(set_l>0 || set_r>0){
-        set_l-=set_l*deacc;
-        set_l=constrain(set_l,0,255);
-        set_r-=set_r*deacc;
-        set_r=constrain(set_r,0,255);
-        write_motor(0,set_l,set_r);
-        }
+      for (int i = 0; i <= setValue; i++) {
+        write_motor(0, -i - (i / 2), -i);
+        delay(4);
+      }
+      if (curr_time > 800)
+        delay(400);
+      write_motor(0, 0, 0);
+      //      while(set_l>0 || set_r>0){
+      //        set_l-=set_l*deacc;
+      //        set_l=constrain(set_l,0,255);
+      //        set_r-=set_r*deacc;
+      //        set_r=constrain(set_r,0,255);
+      //        write_motor(0,set_l,set_r);
+      //        }
       //      Serial.print(start_time);
       //      Serial.print("\t");
       //      Serial.print(millis());
@@ -165,8 +168,8 @@ void write_motor(int f, int x, int y) {
   Serial.print("L_PWM::"); Serial.print(x); Serial.print("\t");
   Serial.print("R_PWM::"); Serial.println(y);
 
-  digitalWrite(dir_l, x > 0);
-  digitalWrite(dir_r, y > 0);
+  digitalWrite(dir_l, x < 0);
+  digitalWrite(dir_r, y < 0);
   if (f == 0)
   {
     digitalWrite(dir_f1, 1);
@@ -213,12 +216,12 @@ void dcv() {
 void belt() {
   if (bot_data.belt_l == 1)
   {
-    analogWrite(belt_l_pwm, 80);
+    analogWrite(belt_l_pwm, 100);
     digitalWrite(belt_l_dir1, HIGH);
     digitalWrite(belt_l_dir2, LOW);
   }
   else if (bot_data.belt_l == 2) {
-    analogWrite(belt_l_pwm, 80);
+    analogWrite(belt_l_pwm, 100);
     digitalWrite(belt_l_dir1, LOW);
     digitalWrite(belt_l_dir2, HIGH);
   }
@@ -234,3 +237,40 @@ void belt() {
     digitalWrite(belt_r_dir2, HIGH);
   }
 }
+
+int flag = 0;
+bool yellow_area = false;
+void isr()
+{
+  yellow_area = true;
+  detachInterrupt(0);
+}
+
+void ysr() {
+  int ctr = 0;
+  for (int i = 0; i < 20; i++)
+    if (digitalRead(2))
+      ctr++;
+  if (ctr == 20)
+    flag++;
+  if (flag == 2) {
+    int ctr = 0;
+    for (int i = 0; i <= setValue; i++) {
+      write_motor(0, -i , -i);
+      delay(5);
+    }
+    delay(200);
+    write_motor(0, 0, 0);
+    while (bot_data.fwd != 0) {
+      update_data();
+      Serial.print("In loop:");
+      Serial.println(bot_data.fwd);
+    }
+    bot_data.motion = 0;
+    bot_data.curr_motion = 0;
+    yellow_area = false;
+    flag = 0;
+    picked_up = true;
+  }
+}
+

@@ -17,6 +17,7 @@
 void loop() {
   if (debug)
   {
+
     if (update_data()) {
       check_motion();
       check_pneumatic();
@@ -31,17 +32,6 @@ void loop() {
       setValue = constrain(setValue, 0, capped_val);
     }
     else updated = false;
-
-    if (has_entered == false) {
-      if ( bot_data.curr_motion == 1 && digitalRead(photo) == HIGH) {
-        stop_all(0);
-        bot_data.curr_motion = 0;
-        bot_data.motion = 0;
-        has_entered = true;
-      }
-    }
-
-
     switch (bot_data.motion) {
       case 0:
         if (bot_data.curr_motion != 0 || updated) {
@@ -59,9 +49,11 @@ void loop() {
         input = get_angle('x');
         pid_obj.myPID.Compute();
         //        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
-        //set_l = setValue + output;
-        set_l = constrain(set_l, -255, 255);
+        set_l = setValue + output;
+        set_l = constrain(set_l, -180, 180);
         write_motor(0, set_l, set_r);
+        if (yellow_area && !picked_up)
+          ysr();
         break;
       case 2:
         if (bot_data.curr_motion != 2 || updated) {
@@ -74,7 +66,7 @@ void loop() {
         pid_obj.myPID.Compute();
         //        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
         set_l = -setValue + output;
-        set_l = constrain(set_l, -255, 255);
+        set_l = constrain(set_l, -180, 180);
         write_motor(0, set_l, set_r);
         break;
       case 3:
