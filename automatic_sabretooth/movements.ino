@@ -1,296 +1,179 @@
-void rot90(int speed, int time) {
+void rotate_to_angle(int speed, double target, byte dir) {
+
+
+  Serial.println("rotate called");
+
+  ramp1(0);
+  ramp2(0);
+  while (true) {
+
+    input = get_yaw();
+    setpoint = target;
+    double diff = angle_diff(input, setpoint);
+    //        Serial.print(input); Serial.print(" ");
+    //          Serial.print(setpoint); Serial.print(" ");
+    //      Serial.print(diff); Serial.println(" ");
+    if (diff <= 1.0) {
+      stop_all();
+      return;
+    } else {
+      if (dir == CW) {
+        write_motors(5, 250, -250);
+      } else if (dir == CCW) {
+        write_motors(-5, -250, 250);
+      }
+    }
+
+  }
+}
+
+void rot90(int speed) {
 
   bno_reset();
+  setpoint = get_yaw() - 90;
+  double cosine, saber, herc, last;
+  long long last_time = millis();
+  last = get_yaw();
+  while (true)
+  {
+    input = get_yaw();
+    if (Serial.available()) {
+      char c = Serial.read();
+      stop_all();
+    }
+    if ((millis() - last_time) > 1000) {
+      //      if (input == last) {
+      //        stop_all();
+      //        Serial.println("No readings being obtained from BNO.");
+      //        STOP
+      //      }
+      last = input;
+      last_time = millis();
+    }
+    if (abs(setpoint - input) <= 0.08 || input < -90.08)
+    {
+      stop_all();
+      Serial.print("Turned 90");
+      ctr2 = 0;
+      ctr2flag = true;
 
-  setpoint = get_yaw() - 90 - last_error;
+      while (true) {
+        Serial.println("ctr2 count: " + String(ctr2));
+        if (ctr2 == 1) {
+          Serial.println(F("2nd photoswitch high. Stopping."));
+          stop_all();
+
+          ctr2flag = false;
+          ctr2 = 0;
+
+          return;
+        }  else {
+          input = get_yaw();
+          myPID.Compute();
+          write_motors(BRAKE, 250 + output, 250);
+        }
+      }
+      //---------------------------
+      while (1) {
+        Serial.println(get_yaw());
+      }
+      //---------------------------
+      return;
+    }
+    cosine = cos(D2R(input));
+    saber = cosine * speed;
+    herc = cosine * 7;
+    write_motors(herc, -saber, saber);
+    //    Serial.print(herc); Serial.print(" ");
+    //    Serial.print(saber); Serial.print(" ");
+    //    Serial.println(input);
+
+  }
+}
+
+void forward_time(int speed, int dir, int d) {
+
+  setpoint = dir;
   input = get_yaw();
 
-  long cur_time = millis();
-  ctr = 0;
-  while (1) {
-
-    write_motors(5, -speed, +speed);
-    input = get_yaw();
-    Serial.print(input, 6);
-    //    Serial.print(" ");
-    Serial.println(setpoint);
-
-    if (abs(setpoint - input) <= 0.5 || ctr == 2 ) {
-      stop_all();
-      last_error = get_yaw() - setpoint;
-      return;
-    }
-
-
-  }
-}
-
-
-void move180(int speed, int time) {
-  bno_reset();
-  int input = get_yaw2();
-  setpoint = get_yaw2() + 180 - last_error;
-  ctr = 0;
-  while (1) {
-    write_motors(5, -speed, +speed);
-    input = get_yaw2();
-
-    int diff = abs(input - setpoint);
-    diff = min(diff, 360 - diff);
-    Serial.print(input);
-    Serial.print(" ");
-    Serial.println(setpoint);
-    if (diff <= 0.5 || ctr == 3) {
-      stop_all();
-      last_error = get_yaw() - setpoint;
-      return;
-    }
-  }
-
-}
-
-
-void forward_ig(int speed, long long time, int ig) {
-
-  bno_reset();
-  ctr = 0;
-  attachInterrupt(digitalPinToInterrupt(2), isr, RISING);
-  setpoint = get_yaw() - last_error;
-  input = setpoint;
   mkpid(kp, ki, kd);
-  long long start_time = millis();
-  int last = ctr; int linecount = 0;
-
-  ctr = 0;
-
-  while ((millis() - start_time) <= time || time < 0) {
-
-    Serial.println(ctr);
 
 
-    if (ctr == ig) {
-      Serial.println("here");
+  long long cur_time = millis();
+
+  while (1) {
+    if (millis() - cur_time >= d) {
+      stop_all();
+      return;
+    }
+
+    input = get_yaw();
+    myPID.Compute();
+    write_motors(BRAKE, speed + output, speed);
+  }
 
 
-      attachInterrupt(digitalPinToInterrupt(3), isr2, RISING);
+}
+
+void forward(int speed, int linecount, double target) {
+
+  ramp1(0);
+  ramp2(0);
+
+  setpoint = target;
+  input = get_yaw();
+
+  mkpid(kp, ki, kd);
+
+  ctr1 = 0;
+  ctr1flag = true;
+
+  while (true) {
+    Serial.println("ctr1 count: " + String(ctr1));
+    if (ctr1 == linecount) {
 
       mkpid(kp, ki, kd);
-      speed = 250;
+      speed = 200;
+
+      ctr1flag = false;
+      ctr1 = 0;
 
       ctr2 = 0;
-      int last2 = ctr2;
+      ctr2flag = true;
 
-      while ((millis() - start_time <= time || time < 0)) {
-        Serial.println("ctr2" + String(ctr2));
-        if (last2 != ctr2) {
-          Serial.println("here2");
+      while (true) {
+        //        Serial.println("ctr2 count: " + String(ctr2));
+        if (line() >= 180) {
+          //          Serial.println(F("2nd photoswitch high. Stopping."));
+
+          Serial.println("stopping");
           stop_all();
-          last_error = get_yaw() - setpoint;
+
+          ctr2flag = false;
+          ctr2 = 0;
+
           return;
-        }
-        else {
+        }  else {
+          //              Serial.print(output); Serial.print(" ");
+          //        Serial.print(input); Serial.print(" ");
+          //          Serial.print(setpoint); Serial.println(" ");
           input = get_yaw();
           myPID.Compute();
           write_motors(BRAKE, speed + output, speed);
-          //          Serial.print(ctr2);
-          //          Serial.print("\n");
         }
       }
-      //      Serial.println("timeout");
-      stop_all();
-      last_error = get_yaw() - setpoint;
-      return;
 
     } else {
+
+      //      Serial.print(output); Serial.println(" ");
+      //        Serial.print(input); Serial.println(" ");
+      //          Serial.print(setpoint); Serial.println(" ");
       input = get_yaw();
       myPID.Compute();
-      write_motors(BRAKE, +speed + output, +speed);
+      write_motors(BRAKE, speed + output, speed);
     }
-  }
-
-  Serial.println("timeout");
-  stop_all();
-  last_error = get_yaw() - setpoint;
-  return;
-
-}
-
-
-
-void forward(int speed, long long  time) {
-  bno_reset();
-  attachInterrupt(digitalPinToInterrupt(2), isr, RISING);
-  setpoint = get_yaw() - last_error;
-
-  input = setpoint;
-
-  mkpid(kp, ki, kd);
-
-  long long start_time = millis();
-
-  ctr = 0;
-
-
-  while ((millis() - start_time) <= time || time < 0) {
-
-    Serial.println(ctr);
-    if (ctr != 0) {
-      Serial.println(ctr);
-      Serial.println("here");
-
-      attachInterrupt(digitalPinToInterrupt(3), isr2, FALLING);
-      mkpid(kp, ki, kd);
-
-      ramp1(2000);
-      ramp3(2000);
-      speed = 250;
-      ctr2 = 0;
-
-
-      while ((millis() - start_time <= time || time < 0)) {
-        if (ctr2 != 0) {
-          Serial.println("here2");
-          last_error = get_yaw() - setpoint;
-          stop_all();
-          return;
-        }
-        else {
-
-          input = get_yaw();
-          myPID.Compute();
-          write_motors(BRAKE, +speed + output, +speed);
-
-        }
-      }
-
-      Serial.println("timeout");
-      last_error = get_yaw() - setpoint;
-      stop_all();
-      return;
-    }
-    else {
-      input = get_yaw();
-      myPID.Compute();
-      write_motors(BRAKE, +speed + output, +speed);
-    }
-  }
-
-  Serial.println("timeout");
-
-  write_motors(BRAKE, BRAKE, BRAKE);
-}
-
-void left(int speed, int time) {
-  bno.begin();
-  delay(50);
-  setpoint = get_yaw();
-  input = setpoint;
-  mkpid(kp, ki, kd);
-
-  long long start_time = millis();
-  while ((millis() - start_time) <= time || time < 0) {
-    myPID.Compute();
-    Serial.println(output);
-    write_motors(+(20 + output), +speed, -speed);
-
-    input = get_yaw();
-
 
   }
-  stop_all();
-}
-
-void right(int speed, int time) {
-  bno.begin();
-  delay(50);
-  setpoint = get_yaw();
-  input = setpoint;
-  mkpid(kp, ki, kd);
-
-  long long start_time = millis();
-  while ((millis() - start_time) <= time || time < 0) {
-
-    Serial.println(output);
-    //    write_motors(-(20+ output), -speed, +speed);
-
-    input = get_yaw();
-    myPID.Compute();
-
-  }
-
-  stop_all();
-}
-
-void back(int speed, int time) {
-  bno.begin();
-  delay(50);
-  setpoint = get_yaw();
-  input = setpoint;
-  mkpid(kp, ki, kd);
-
-  long long start_time = millis();
-  while ((millis() - start_time) <= time || time < 0) {
-    write_motors(0, -speed, -speed);
-    input = get_yaw();
-    myPID.Compute();
-  }
-  stop_all();
-}
-
-void backward_ig(int speed, int time, int ig) {
-
-  ctr2 = 0;
-  //  attachInterrupt(digitalPinToInterrupt(2), isr, RISING);
-  setpoint = get_yaw();
-  input = setpoint;
-  mkpid(kp, ki, kd);
-  long long start_time = millis();
-  int last = ctr; int linecount = 0;
-
-  ctr2 = 0;
-
-  while ((millis() - start_time) <= time || time < 0) {
-
-    if (ctr2 == ig) {
-      Serial.println("here");
-
-
-      attachInterrupt(digitalPinToInterrupt(3), isr2, RISING);
-
-      mkpid(kp, ki, kd);
-      speed = 250;
-
-      ctr2 = 0;
-      int last2 = ctr2;
-
-      while ((millis() - start_time <= time || time < 0)) {
-        if (last2 != ctr2) {
-          Serial.println("here2");
-          stop_all();
-          return;
-        }
-        else {
-          input = get_yaw();
-          myPID.Compute();
-          write_motors(BRAKE, speed + output, speed);
-          Serial.print(ctr2);
-          Serial.print("\n");
-        }
-      }
-      Serial.println("timeout");
-      stop_all();
-      return;
-
-    } else {
-      input = get_yaw();
-      myPID.Compute();
-      write_motors(BRAKE, +speed + output, +speed);
-    }
-  }
-
-  Serial.println("timeout");
-  stop_all();
-  return;
 
 }
 
