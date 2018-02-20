@@ -8,45 +8,47 @@ void motor1(int pwm) {
     return;
   }
 
+  pwm = -pwm;
+
   pwm = constrain(pwm, -2047, +2047);
-  if (motors.m1 == BRAKE) 
+  if (motors.m1 == BRAKE)
     write_m1("startup");
 
   write_m1(String(pwm));
   motors.m1 = pwm;
-} 
+}
 
 void motor2(int pwm) {
 
-//  if (pwm == motors.m2) return ;
+  //  if (pwm == motors.m2) return ;
 
-  if (pwm == BRAKE) { 
+  if (pwm == BRAKE) {
 
-    
+
     digitalWrite(MONSTER_L1, HIGH);
     digitalWrite(MONSTER_L2, HIGH);
     analogWrite(MONSTER_PWM, 0);
     motors.m2 = pwm;
     return;
-  
+
   }
 
- // pwm = map(pwm, -2047, +2047, -255, +255);
-pwm = constrain(pwm , -255, +255);
+  // pwm = map(pwm, -2047, +2047, -255, +255);
+  pwm = constrain(pwm , -255, +255);
 
- 
-    if (pwm == 0) {
-      digitalWrite(MONSTER_L1, LOW);
-      digitalWrite(MONSTER_L2, LOW);
-    } else if (pwm > 0) {
-      digitalWrite(MONSTER_L1, HIGH);
-      digitalWrite(MONSTER_L2, LOW);
-    } else {
-      digitalWrite(MONSTER_L1, LOW);
-      digitalWrite(MONSTER_L2, HIGH);
-    }
-  
 
+  if (pwm == 0) {
+    digitalWrite(MONSTER_L1, LOW);
+    digitalWrite(MONSTER_L2, LOW);
+  } else if (pwm > 0) {
+    digitalWrite(MONSTER_L1, HIGH);
+    digitalWrite(MONSTER_L2, LOW);
+  } else {
+    digitalWrite(MONSTER_L1, LOW);
+    digitalWrite(MONSTER_L2, HIGH);
+  }
+
+  //Serial.println( String(pwm));
   analogWrite(MONSTER_PWM, abs(pwm));
   motors.m2 = pwm;
 
@@ -55,7 +57,7 @@ pwm = constrain(pwm , -255, +255);
 
 
 void motor3(int pwm) {
- 
+
   if (motors.m3 == pwm) return; // do nothing
 
   if (pwm == BRAKE) {
@@ -65,20 +67,23 @@ void motor3(int pwm) {
     return;
   }
 
+  pwm = -pwm;
+
   pwm = constrain(pwm, -2047, +2047);
-  if (motors.m3 == BRAKE) 
+  if (motors.m3 == BRAKE)
     write_m3("startup");
 
   write_m3(String(pwm));
   motors.m3 = pwm;
 }
 
-
-
 void write_motors(int f, int l, int r) {
+//  Serial.print("F: "); Serial.print(f);
+//  Serial.print(" L: "); Serial.print(l);
+//  Serial.print(" R: "); Serial.println(r);
   motor2(f);
-  motor3(l);
-  motor1(r);
+  motor3(r);
+  motor1(l);
 }
 
 void stop_all() {
