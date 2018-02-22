@@ -75,6 +75,12 @@ function send_data(point, name) {
   port.write(Buffer.from([data[name]]));
 }
 
+function mkzero() {
+  Object.keys(data).forEach(key => {
+    data[key] = 0
+  });
+}
+
 function update_data() {
   port.write(Buffer.from("s"));
   send_data("f", "fwd");
@@ -103,10 +109,13 @@ for (let i = 0; i < 16; i++) {
 blynk.on("connect", function() {
   console.log("Blynk ready.");
   blynk.syncAll();
-  setInterval(() => update_data(), 100);
+  GLOBAL.handle = setInterval(() => update_data(), 100);
 });
 
 blynk.on("disconnect", function() {
   console.log("DISCONNECT");
+  mkzero();
+  update_data();
+  clearInterval(GLOBAL.handle);
 });
 
