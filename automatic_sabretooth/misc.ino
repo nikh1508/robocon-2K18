@@ -52,17 +52,15 @@ void bno_reset() {
   bno.begin();
 }
 
-void isr() {
-  if (digitalRead(2) == HIGH) {
-    ctr2++;
-  }
-}
+
 
 void isr2() {
-  long long val = millis();
-  if ((val - last_time) >= 300) {
-    ctr1++;
-    last_time = val;
+  if (ctr1flag) {
+    long long m = millis();
+    if (m - last_time >= 500) {
+      ctr1++;
+      last_time = m;
+    }
   }
 }
 
@@ -92,34 +90,34 @@ double line() {
   }
 
   double f = 0;
- 
-//  Serial.print(data[0]);
-//  Serial.print(" "); 
-// 
-//  Serial.print(data[2]);
-//   Serial.print(" "); 
-//  Serial.print(data[4]);
-// Serial.print(" "); 
-//  Serial.print(data[6]);
-// Serial.print(" "); 
-//  Serial.print(data[8]);
-//   Serial.print(" "); 
-//  Serial.print(data[10]);
-// Serial.print(" "); 
-//  Serial.print(data[12]);
-// Serial.print(" "); 
-//  Serial.print(data[14]);
-//  Serial.println();
 
-  for (int i = 0; i <= 14; i+= 2)
+  //  Serial.print(data[0]);
+  //  Serial.print(" ");
+  //
+  //  Serial.print(data[2]);
+  //   Serial.print(" ");
+  //  Serial.print(data[4]);
+  // Serial.print(" ");
+  //  Serial.print(data[6]);
+  // Serial.print(" ");
+  //  Serial.print(data[8]);
+  //   Serial.print(" ");
+  //  Serial.print(data[10]);
+  // Serial.print(" ");
+  //  Serial.print(data[12]);
+  // Serial.print(" ");
+  //  Serial.print(data[14]);
+  //  Serial.println();
+
+  for (int i = 0; i <= 14; i += 2)
     f += data[i];
 
   f /= 8.0;
 
   Serial.println(f);
- return f;
+  return f;
 }
-  
+
 
 
 

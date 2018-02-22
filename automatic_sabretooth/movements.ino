@@ -1,8 +1,4 @@
 void rotate_to_angle(int speed, double target, byte dir) {
-
-
-  Serial.println("rotate called");
-
   ramp1(0);
   ramp2(0);
   while (true) {
@@ -10,9 +6,9 @@ void rotate_to_angle(int speed, double target, byte dir) {
     input = get_yaw();
     setpoint = target;
     double diff = angle_diff(input, setpoint);
-    //        Serial.print(input); Serial.print(" ");
-    //          Serial.print(setpoint); Serial.print(" ");
-    //      Serial.print(diff); Serial.println(" ");
+    //    Serial.print(input); Serial.print(" ");
+    //    Serial.print(setpoint); Serial.print(" ");
+    //    Serial.print(diff); Serial.println(" ");
     if (diff <= 1.0) {
       stop_all();
       return;
@@ -27,6 +23,57 @@ void rotate_to_angle(int speed, double target, byte dir) {
   }
 }
 
+void backward_time(int speed, int target, int time) {
+  setpoint = target;
+  input = get_yaw();
+
+  mkpid(kp, ki, kd);
+
+
+  long long cur_time = millis();
+
+  while (1) {
+    if (millis() - cur_time >= time) {
+      stop_all();
+      return;
+    }
+
+    input = get_yaw();
+    myPID.Compute();
+    write_motors(BRAKE, -speed, -speed);
+  }
+}
+
+void f2line(double tg) {
+  ramp1(0);
+  ramp2(0);
+
+  mkpid(kp, ki, kd);
+  setpoint = tg;
+
+  while (true) {
+    double val = line();
+    Serial.println(val);
+    if (val >= 200) break;
+    input = get_yaw();
+    myPID.Compute();
+    write_motors(BRAKE, 100 + output, 100);
+  }
+
+  stop_all();
+}
+
+void l2line() {
+  ramp1(0);
+  ramp2(0);
+
+  write_motors(-18, 150, -150);
+
+  while (digitalRead(2) == HIGH);
+
+  stop_all();
+
+}
 void rot90(int speed) {
 
   bno_reset();
@@ -115,10 +162,18 @@ void forward_time(int speed, int dir, int d) {
 
 }
 
-void forward(int speed, int linecount, double target) {
+//void left(int speed, int time) {
+//
+//  long long start_time = millis();
+//  while ((millis() - start_time) < time) {
+//   write_motors(
+//  }
+//}
 
-  ramp1(0);
-  ramp2(0);
+void forward(int speed, int linecount, double target, int ign=0) {
+
+  ramp1(2000);
+  ramp2(2000);
 
   setpoint = target;
   input = get_yaw();
@@ -127,10 +182,12 @@ void forward(int speed, int linecount, double target) {
 
   ctr1 = 0;
   ctr1flag = true;
-
+  long long tstart = millis();
   while (true) {
     Serial.println("ctr1 count: " + String(ctr1));
     if (ctr1 == linecount) {
+      ramp1(0);
+      ramp2(0);
 
       mkpid(kp, ki, kd);
       speed = 200;
@@ -142,9 +199,9 @@ void forward(int speed, int linecount, double target) {
       ctr2flag = true;
 
       while (true) {
-        //        Serial.println("ctr2 count: " + String(ctr2));
+
+        Serial.println("ctr2 count: " + String(ctr2));
         if (line() >= 180) {
-          //          Serial.println(F("2nd photoswitch high. Stopping."));
 
           Serial.println("stopping");
           stop_all();
@@ -154,9 +211,9 @@ void forward(int speed, int linecount, double target) {
 
           return;
         }  else {
-          //              Serial.print(output); Serial.print(" ");
-          //        Serial.print(input); Serial.print(" ");
-          //          Serial.print(setpoint); Serial.println(" ");
+          Serial.print(output); Serial.print(" ");
+          Serial.print(input); Serial.print(" ");
+          Serial.print(setpoint); Serial.println(" ");
           input = get_yaw();
           myPID.Compute();
           write_motors(BRAKE, speed + output, speed);
@@ -165,9 +222,9 @@ void forward(int speed, int linecount, double target) {
 
     } else {
 
-      //      Serial.print(output); Serial.println(" ");
-      //        Serial.print(input); Serial.println(" ");
-      //          Serial.print(setpoint); Serial.println(" ");
+      Serial.print(output); Serial.println(" ");
+      Serial.print(input); Serial.println(" ");
+      Serial.print(setpoint); Serial.println(" ");
       input = get_yaw();
       myPID.Compute();
       write_motors(BRAKE, speed + output, speed);

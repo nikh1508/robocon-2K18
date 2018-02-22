@@ -24,7 +24,6 @@ void motor2(int pwm) {
 
   if (pwm == BRAKE) {
 
-
     digitalWrite(MONSTER_L1, HIGH);
     digitalWrite(MONSTER_L2, HIGH);
     analogWrite(MONSTER_PWM, 0);
