@@ -14,7 +14,7 @@ void loop() {
     {
 
       Serial.print(dphoto_forw); Serial.print(dphoto_bac); Serial.print("\t");
-      Serial.print(dshoot); Serial.print("\t"); Serial.print(zp1); Serial.print("\t"); Serial.print(zp2);
+      Serial.print(zone1); Serial.print("\t"); Serial.print(zone2); Serial.print("\t"); Serial.print(zone3);
       launch(); 
     }
   }

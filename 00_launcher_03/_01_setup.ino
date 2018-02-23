@@ -10,7 +10,7 @@ void setup_launcher()
   pinMode(photo_forw, INPUT);
   pinMode(photo_bac, INPUT);
  
-  pinMode(shoot,INPUT);
-  pinMode(zone_pin1,INPUT);
-  pinMode(zone_pin2,INPUT);
+  pinMode(tz1,INPUT);
+  pinMode(tz2,INPUT);
+  pinMode(tz3,INPUT);
 }
