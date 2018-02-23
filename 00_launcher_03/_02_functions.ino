@@ -1,5 +1,7 @@
 void launch()
-{   //--------------------------TZ1-------------------------------
+{ 
+   
+  //--------------------------TZ1-------------------------------
   if(zone1)
   {
     
@@ -32,7 +34,7 @@ void launch()
     }
      if (dphoto_forw)
     {
-      delayMicroseconds(1);//experimnetal
+      delayMicroseconds(15000);//experimnetal
       for (int i = 0; i < 4 ; i++) { //2
         launch_ccw(95);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 160 PWM ON ANY POINT.........!!!!!!!!!
         delay(20);
