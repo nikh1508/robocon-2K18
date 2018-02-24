@@ -102,6 +102,7 @@ void move_fwd() {
   if (bot_data.curr_motion != 1) {
     bno.begin();
     delay(50);
+    start_time = millis();
     setpoint = get_angle('x');
     output = 0.0;
     redeclare_pid(pid_mat[0][0], pid_mat[0][1], pid_mat[0][2]);
@@ -113,6 +114,7 @@ void move_bkwd() {
   if (bot_data.curr_motion != 2) {
     bno.begin();
     delay(50);
+    start_time = millis();
     setpoint = get_angle('x');
     output = 0.0;
     redeclare_pid(pid_mat[0][0], pid_mat[0][1], pid_mat[0][2]);

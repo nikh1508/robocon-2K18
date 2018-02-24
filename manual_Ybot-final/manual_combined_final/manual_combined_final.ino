@@ -1,7 +1,7 @@
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 #define setValue bot_data.slider
-#define capped_val 100                                               //back motors capped value
-#define debug false                                                  //check
+#define capped_val 150                                               //back motors capped value
+#define debug true                                                  //check
 #define deacc 0.002
 #define acc 0.8
 //--------------------------Motor Pins-------------------------------------

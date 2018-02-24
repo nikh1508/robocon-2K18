@@ -42,8 +42,6 @@ void loop() {
       case 1:
         if (bot_data.curr_motion != 1 || updated) {
           move_fwd();
-          if (bot_data.curr_motion != 1)
-            start_time = millis();
           bot_data.curr_motion = 1;
         }
         input = get_angle('x');
@@ -58,8 +56,6 @@ void loop() {
       case 2:
         if (bot_data.curr_motion != 2 || updated) {
           move_bkwd();
-          if (bot_data.curr_motion != 2)
-            start_time = millis();
           bot_data.curr_motion = 2;
         }
         input = get_angle('x');

@@ -1,103 +1,95 @@
 void launch()
 {
-
-  //--------------------------TZ1-------------------------------
   if (zone1 == 1)
   {
-
     if (dphoto_bac)
     {
-      launch_cw(50);                                 //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
+      launch_cw(70);
       Serial.println("Throwing");
     }
-    if (dphoto_forw)
+
+    if (dphoto_forw )
     {
+
       delayMicroseconds(1);//experimnetal
       for (int i = 0; i < 4 ; i++) { //2
-        launch_ccw(80);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
+        launch_ccw(70);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
         delay(20);
         brake_lock();
         Serial.println("Retracting");
       }
+
       while (!dphoto_bac)
       {
-        launch_ccw(20);
+        launch_ccw(10);
         delay(20);
         brake_lock();
         photos();
       }
-      //      delay(40);
-      //      brake_free();
+      flag = true;
     }
   }
 
-  //---------------------TZ2---------------------------------
-  else if (zone2 == 1)
+  if (zone2 == 1)
   {
     if (dphoto_bac)
     {
-      launch_cw(50);                                 //IF USING 5S BATTERY DONT GIVE MORE THAN 160 PWM ON ANY POINT.........!!!!!!!!!
+      launch_cw(107);
       Serial.println("Throwing");
     }
-    if (dphoto_forw)
+
+    if (dphoto_forw )
     {
-      delayMicroseconds(1);//experimnetal
+
+      delayMicroseconds(15000);//experimnetal
       for (int i = 0; i < 4 ; i++) { //2
-        launch_ccw(80);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 160 PWM ON ANY POINT.........!!!!!!!!!
+        launch_ccw(107);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
         delay(20);
         brake_lock();
         Serial.println("Retracting");
       }
+
       while (!dphoto_bac)
       {
-        launch_ccw(20);
+        launch_ccw(10);
         delay(20);
         brake_lock();
         photos();
       }
-      //      delay(25);
-      //      brake_free();
-
-
-
+      flag = true;
     }
   }
-  //----------------------_TZ3--------------------------------
-  else if (zone3 == 1)
+  if (zone3 == 1)
   {
     if (dphoto_bac)
     {
-      launch_cw(50);                                 //IF USING 5S BATTERY DONT GIVE MORE THAN 160 PWM ON ANY POINT.........!!!!!!!!!
+      launch_cw(30);
       Serial.println("Throwing");
     }
-    if (dphoto_forw)
+
+    if (dphoto_forw )
     {
+
       delayMicroseconds(1);//experimnetal
       for (int i = 0; i < 4 ; i++) { //2
-        launch_ccw(80);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 160 PWM ON ANY POINT.........!!!!!!!!!
+        launch_ccw(40);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
         delay(20);
         brake_lock();
         Serial.println("Retracting");
       }
+
       while (!dphoto_bac)
       {
-        launch_ccw(20);
+        launch_ccw(10);
         delay(20);
         brake_lock();
         photos();
       }
-      //      delay(25);
-      //      brake_free();
-
-
-
+      flag = true;
     }
-  }
-  else
-  {
-    brake_free();
   }
 }
+
 
 
 void launch_ccw(int spd)
@@ -128,6 +120,10 @@ void photos()
 { dphoto_forw = digitalRead(photo_forw);
   dphoto_bac = digitalRead(photo_bac);
 
+
+}
+void read_zone()
+{
   zone1 = digitalRead(tz1);
   zone2 = digitalRead(tz2);
   zone3 = digitalRead(tz3);

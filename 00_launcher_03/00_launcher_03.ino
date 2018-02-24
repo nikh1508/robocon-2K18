@@ -1,7 +1,7 @@
 #define Serial_debug  false
-#define manual_mode true //CHECK
+#define manual_mode false//CHECK
 
-
+boolean flag=true; 
 int a = 2;
 int b = 4;
 int pwm = 3;
