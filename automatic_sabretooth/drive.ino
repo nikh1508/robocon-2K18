@@ -81,8 +81,8 @@ void write_motors(int f, int l, int r) {
 //  Serial.print(" L: "); Serial.print(l);
 //  Serial.print(" R: "); Serial.println(r);
   motor2(f);
-  motor3(r);
-  motor1(l);
+  motor3(l);
+  motor1(r);
 }
 
 void stop_all() {

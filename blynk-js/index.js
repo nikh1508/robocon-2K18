@@ -53,7 +53,7 @@ console.log(data);
 function check_belt() {
   if (data["belt_l_fwd"] !== 0) data["belt_l"] = 1;
   else if (data["belt_l_rev"] !== 0) data["belt_l"] = 2;
-  else belt_l = 0;
+  else data["belt_l"] = 0;
 
   if (data["belt_r_fwd"] !== 0) data["belt_r"] = 1;
   else if (data["belt_r_rev"] !== 0) data["belt_r"] = 2;

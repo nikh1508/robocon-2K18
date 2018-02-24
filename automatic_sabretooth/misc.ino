@@ -46,12 +46,6 @@ void mkpid(double kp, double ki, double kd) {
   myPID.SetOutputLimits(-500, +500);
 }
 
-void bno_reset() {
-  digitalWrite(bno_rst_pin, LOW);
-  digitalWrite(bno_rst_pin, HIGH);
-  bno.begin();
-}
-
 
 
 void isr2() {
@@ -65,7 +59,7 @@ void isr2() {
 }
 
 void print_error() {
-  Serial.println(last_error);
+//  Serial.println(last_error);
   while (!Serial.available())
     char ch = Serial.read();
 }
@@ -91,30 +85,12 @@ double line() {
 
   double f = 0;
 
-  //  Serial.print(data[0]);
-  //  Serial.print(" ");
-  //
-  //  Serial.print(data[2]);
-  //   Serial.print(" ");
-  //  Serial.print(data[4]);
-  // Serial.print(" ");
-  //  Serial.print(data[6]);
-  // Serial.print(" ");
-  //  Serial.print(data[8]);
-  //   Serial.print(" ");
-  //  Serial.print(data[10]);
-  // Serial.print(" ");
-  //  Serial.print(data[12]);
-  // Serial.print(" ");
-  //  Serial.print(data[14]);
-  //  Serial.println();
-
   for (int i = 0; i <= 14; i += 2)
     f += data[i];
 
   f /= 8.0;
 
-  Serial.println(f);
+  Serial.println("[line] " + String(f));
   return f;
 }
 
