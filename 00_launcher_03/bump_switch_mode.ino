@@ -1,5 +1,6 @@
 void manual()
 {
+  photos();
   if(Serial.available())
   {
     qw=Serial.read();
@@ -15,7 +16,8 @@ void manual()
       launch_cw(fwm);
       Serial.println("Throwing");
     }
-    if (dphoto_forw)
+//    photos();
+    if (dphoto_forw && qw=='s')
     {
       delayMicroseconds(del);//experimnetal
       for (int i = 0; i < 4 ; i++) { //2
@@ -24,9 +26,15 @@ void manual()
         brake_lock();
         Serial.println("Retracting");
       }
-   delay(25);
-   brake_free();
-   
+//   delay(25);
+//   brake_free();
+   while(!dphoto_bac)
+   {
+    launch_ccw(10);
+    delay(20);
+    brake_lock();
+    photos();
+   }
      qw='o';
     }
     Serial.print(dphoto_forw); Serial.print(dphoto_bac); Serial.println("\t");

@@ -1,5 +1,5 @@
 #define Serial_debug  false
-#define manual_mode true  //CHECK
+#define manual_mode true //CHECK
 
 
 int a = 2;
