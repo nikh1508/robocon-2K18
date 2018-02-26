@@ -59,7 +59,7 @@ void isr2() {
 }
 
 void print_error() {
-//  Serial.println(last_error);
+  //  Serial.println(last_error);
   while (!Serial.available())
     char ch = Serial.read();
 }
@@ -93,6 +93,34 @@ double line() {
   Serial.println("[line] " + String(f));
   return f;
 }
+
+long long enc_time=millis();
+long enc_last=0;
+
+long encoder() {
+  if((millis()-enc_time)>ENCODER_SAMPLE_TIME){
+  Serial3.print('k');
+  long S = 0;
+  int neg=1;
+  while (Serial3.available()) {
+    int val = Serial3.read();
+    if (val=='-'){
+      neg=-1;
+      continue;
+      }
+    S += (val - 48) * pow(10, Serial3.available());
+  }  
+  enc_last= S*neg;
+  enc_time=millis();
+  return enc_last;
+  }
+  else return enc_last;
+}
+
+void reset_encoder() {
+  Serial3.print('u');
+}
+
 
 
 

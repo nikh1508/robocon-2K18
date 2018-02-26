@@ -3,12 +3,10 @@ void motor1(int pwm) {
 
   if (pwm == BRAKE) {
     write_m1("0");
-    write_m1("shutdown");
+   // write_m1("shutdown");
     motors.m1 = BRAKE;
     return;
   }
-
-  pwm = -pwm;
 
   pwm = constrain(pwm, -2047, +2047);
   if (motors.m1 == BRAKE)
@@ -61,12 +59,10 @@ void motor3(int pwm) {
 
   if (pwm == BRAKE) {
     write_m3("0");
-    write_m3("shutdown");
+   // write_m3("shutdown");
     motors.m3 = BRAKE;
     return;
   }
-
-  pwm = -pwm;
 
   pwm = constrain(pwm, -2047, +2047);
   if (motors.m3 == BRAKE)
@@ -86,5 +82,7 @@ void write_motors(int f, int l, int r) {
 }
 
 void stop_all() {
+  ramp1(0);
+  ramp2(0);
   write_motors(BRAKE, BRAKE, BRAKE);
 }
