@@ -51,8 +51,6 @@ void motor2(int pwm) {
 
 }
 
-
-
 void motor3(int pwm) {
 
   if (motors.m3 == pwm) return; // do nothing
