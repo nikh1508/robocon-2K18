@@ -48,7 +48,7 @@ void loop() {
         pid_obj.myPID.Compute();
         //        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
         set_l = setValue + output;
-        set_l = constrain(set_l, -180, 180);
+        set_l = constrain(set_l, -200, 200);
         write_motor(0, set_l, set_r);
         if (yellow_area && !picked_up)
           ysr();
@@ -62,7 +62,7 @@ void loop() {
         pid_obj.myPID.Compute();
         //        Serial.println("OUT::" + String(output) + "\tSET::" + String(setpoint) + "\tIN:" + String(input));
         set_l = -setValue + output;
-        set_l = constrain(set_l, -180, 180);
+        set_l = constrain(set_l, -200, 200);
         write_motor(0, set_l, set_r);
         break;
       case 3:

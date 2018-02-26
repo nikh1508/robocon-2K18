@@ -4,7 +4,7 @@ void launch()
   {
     if (dphoto_bac)
     {
-      launch_cw(70);
+      launch_cw(72);
       Serial.println("Throwing");
     }
 
@@ -13,7 +13,7 @@ void launch()
 
       delayMicroseconds(1);//experimnetal
       for (int i = 0; i < 4 ; i++) { //2
-        launch_ccw(70);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
+        launch_ccw(72);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
         delay(20);
         brake_lock();
         Serial.println("Retracting");
@@ -41,7 +41,7 @@ void launch()
     if (dphoto_forw )
     {
 
-      delayMicroseconds(15000);//experimnetal
+      delayMicroseconds(17000);//experimnetal
       for (int i = 0; i < 4 ; i++) { //2
         launch_ccw(107);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
         delay(20);
@@ -63,16 +63,16 @@ void launch()
   {
     if (dphoto_bac)
     {
-      launch_cw(30);
+      launch_cw(142);
       Serial.println("Throwing");
     }
 
     if (dphoto_forw )
     {
 
-      delayMicroseconds(1);//experimnetal
+      delayMicroseconds(5000);//experimnetal
       for (int i = 0; i < 4 ; i++) { //2
-        launch_ccw(40);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
+        launch_ccw(144);                              //IF USING 5S BATTERY DONT GIVE MORE THAN 159 PWM ON ANY POINT.........!!!!!!!!!
         delay(20);
         brake_lock();
         Serial.println("Retracting");

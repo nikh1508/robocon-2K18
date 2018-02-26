@@ -1,13 +1,13 @@
 void setup() {
   Serial.begin(9600);
   setup_launcher();
-  delay(1000);
-  while(!dphoto_forw)
-  {
-    photos();
-    launch_ccw(20);
-  }
-  brake_free();
+//  delay(1000);
+//  while(!dphoto_forw)
+//  {
+//    photos();
+//    launch_ccw(20);
+//  }
+//  brake_free();
 }
 void setup_launcher()
 {

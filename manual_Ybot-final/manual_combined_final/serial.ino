@@ -2,11 +2,11 @@ bool receiving_data = false;
 
 byte read() {
   if (receiving_data) {
-    while (!Serial1.available()) {}
-    return Serial1.read();
+    while (!Serial3.available()) {}
+    return Serial3.read();
   }
-  else if (Serial1.available()) {
-    return Serial1.read();
+  else if (Serial3.available()) {
+    return Serial3.read();
   }
   else
     return '\0';

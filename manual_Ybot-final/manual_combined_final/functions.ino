@@ -47,40 +47,54 @@ void stop_all(int x) {
       write_motor(0, 0, 0);
       break;
     case 1:
-      for (int i = 0; i <= setValue; i++) {
-        write_motor(0, -i - (i / 2), -i);
-        delay(4);
+      if (setValue < 28)
+      {
+        write_motor(0, 0, 0);
       }
-      if (curr_time > 800)
-        delay(400);
-      write_motor(0, 0, 0);
-      //      while(set_l>0 || set_r>0){
-      //        set_l-=set_l*deacc;
-      //        set_l=constrain(set_l,0,255);
-      //        set_r-=set_r*deacc;
-      //        set_r=constrain(set_r,0,255);
-      //        write_motor(0,set_l,set_r);
-      //        }
-      //      Serial.print(start_time);
-      //      Serial.print("\t");
-      //      Serial.print(millis());
-      //      Serial.print("\t");
-      //      Serial.println(curr_time);
-      write_motor(0, 0, 0);
+      else
+      {
+        for (int i = 0; i <= setValue; i++) {
+          write_motor(0, -i - (i / 2), -i);
+          delay(4);
+        }
+        if (curr_time > 800)
+          delay(400);
+        write_motor(0, 0, 0);
+        //      while(set_l>0 || set_r>0){
+        //        set_l-=set_l*deacc;
+        //        set_l=constrain(set_l,0,255);
+        //        set_r-=set_r*deacc;
+        //        set_r=constrain(set_r,0,255);
+        //        write_motor(0,set_l,set_r);
+        //        }
+        //      Serial.print(start_time);
+        //      Serial.print("\t");
+        //      Serial.print(millis());
+        //      Serial.print("\t");
+        //      Serial.println(curr_time);
+        //      write_motor(0, 0, 0);
+      }
       break;
     case 2:
-      for (int i = 0; i <= setValue; i++) {
-        write_motor(0, i + (i / 2), i);
-        delay(4);
+      if (setValue < 28)
+      {
+        write_motor(0, 0, 0);
       }
-      //      Serial.print(start_time);
-      //      Serial.print("\t");
-      //      Serial.print(millis());
-      //      Serial.print("\t");
-      //      Serial.println(curr_time);
-      if (curr_time > 800)
-        delay(400);
-      write_motor(0, 0, 0);
+      else
+      {
+        for (int i = 0; i <= setValue; i++) {
+          write_motor(0, i + (i / 2), i);
+          delay(4);
+        }
+        //      Serial.print(start_time);
+        //      Serial.print("\t");
+        //      Serial.print(millis());
+        //      Serial.print("\t");
+        //      Serial.println(curr_time);
+        if (curr_time > 800)
+          delay(400);
+        write_motor(0, 0, 0);
+      }
       break;
     case 3:
       write_motor(5, -7, 4);
@@ -105,6 +119,7 @@ void move_fwd() {
     start_time = millis();
     setpoint = get_angle('x');
     output = 0.0;
+
     redeclare_pid(pid_mat[0][0], pid_mat[0][1], pid_mat[0][2]);
   }
   set_l = set_r = setValue;
@@ -218,23 +233,23 @@ void dcv() {
 void belt() {
   if (bot_data.belt_l == 1)
   {
-    analogWrite(belt_l_pwm, 100);
+    analogWrite(belt_l_pwm, 200);
     digitalWrite(belt_l_dir1, HIGH);
     digitalWrite(belt_l_dir2, LOW);
   }
   else if (bot_data.belt_l == 2) {
-    analogWrite(belt_l_pwm, 100);
+    analogWrite(belt_l_pwm, 200);
     digitalWrite(belt_l_dir1, LOW);
     digitalWrite(belt_l_dir2, HIGH);
   }
   else if (bot_data.belt_r == 1) {
-    analogWrite(belt_r_pwm, 120);
+    analogWrite(belt_r_pwm, 200);
     digitalWrite(belt_r_dir1, HIGH);
     digitalWrite(belt_r_dir2, LOW);
   }
 
   else if (bot_data.belt_r == 2) {
-    analogWrite(belt_r_pwm, 120);
+    analogWrite(belt_r_pwm, 200);
     digitalWrite(belt_r_dir1, LOW);
     digitalWrite(belt_r_dir2, HIGH);
   }
@@ -257,11 +272,11 @@ void ysr() {
     flag++;
   if (flag == 2) {
     int ctr = 0;
-    for (int i = 0; i <= setValue; i++) {
+    for (int i = 0; i <= (setValue + 40); i++) {
       write_motor(0, -i , -i);
-      delay(5);
+      delay(3);
     }
-    delay(200);
+    delay(350);
     write_motor(0, 0, 0);
     while (bot_data.fwd != 0) {
       update_data();
