@@ -1,12 +1,9 @@
 void write_m1(String cmd) {
   Serial2.print("M1: " + cmd + "\r\n");
-  //  Serial.println("M1:" + cmd);
 }
-
 
 void write_m3(String cmd) {
   Serial2.print("M2: " + cmd + "\r\n");
-  //  Serial.println("M3:" + cmd);
 }
 
 void ramp1(int r) {
@@ -17,7 +14,7 @@ void ramp2(int r) {
   Serial2.print("R2: " + String(r) + "\r\n");
 }
 
-//double get_yaw() {
+// double get_yaw() {
 ////  long long curt = millis();
 ////  if (bno_last_time == -1 || ((curt - bno_last_time) >= 10)) {
 //    sensors_event_t event;
@@ -42,50 +39,31 @@ void mkpid(double kp, double ki, double kd) {
   myPID.SetOutputLimits(-500, +500);
 }
 
-
-
-void isr2() {
-  if (ctr1flag) {
-    long long m = millis();
-    if (m - last_time >= 500) {
-      ctr1++;
-      last_time = m;
-    }
-  }
-}
-
-void print_error() {
-  //  Serial.println(last_error);
-  while (!Serial.available())
-    char ch = Serial.read();
-}
-
 double angle_diff(double a, double b) {
   double r = fabs(a - b);
   return min(r, 360 - r);
 }
 
-//double adiff(double a, double b)
+// double adiff(double a, double b)
 //{
 //    double diff = fabs(b - a);
 //    double err = min(diff, 360 - diff);
 //    double tmp = a + err;
 //    if (tmp >= 360) tmp -= 360;
 //
-//    if (fabs(tmp - b) <= 1e-2) 
+//    if (fabs(tmp - b) <= 1e-2)
 //        return +err;
 //    else
 //        return -err;
 //}
 
 double line() {
-
   unsigned char data[16];
   unsigned char t;
-  Wire.requestFrom(9, 16);    // request 16 bytes from slave device #9
-  while (Wire.available())   // slave may send less than requested
+  Wire.requestFrom(9, 16);  // request 16 bytes from slave device #9
+  while (Wire.available())  // slave may send less than requested
   {
-    data[t] = Wire.read(); // receive a byte as character
+    data[t] = Wire.read();  // receive a byte as character
     if (t < 15)
       t++;
     else
@@ -98,39 +76,38 @@ double line() {
     f += data[i];
 
   f /= 8.0;
-
   Serial.println("[line] " + String(f));
   return f;
 }
 
-long long enc_time=millis();
-long enc_last=0;
+long long enc_time = millis();
+long enc_last = 0;
 
 long encoder() {
-  if((millis()-enc_time)>ENCODER_SAMPLE_TIME){
-  Serial1.print('k');
-  long S = 0;
-  int neg=-1;
-  while (Serial1.available()) {
-    int val = Serial1.read();
-    if (val=='-'){
-      neg=+1;
-      continue;
+  if ((millis() - enc_time) > ENCODER_SAMPLE_TIME) {
+    Serial1.print('k');
+    long S = 0;
+    int neg = -1;
+    while (Serial1.available()) {
+      int val = Serial1.read();
+      if (val == '-') {
+        neg = +1;
+        continue;
       }
-    S += (val - 48) * pow(10, Serial1.available());
-  }  
-  enc_last= S*neg;
-  enc_time=millis();
-  return enc_last;
-  }
-  else return enc_last;
+      S += (val - 48) * pow(10, Serial1.available());
+    }
+    enc_last = S * neg;
+    enc_time = millis();
+    return enc_last;
+  } else
+    return enc_last;
 }
 
 void reset_encoder() {
   Serial1.print('u');
   Serial1.flush();
-  while(Serial1.available())
-  char ch=Serial1.read();
+  while (Serial1.available())
+    char ch = Serial1.read();
 }
 
 void bno_initialize() {
@@ -164,7 +141,8 @@ double get_yaw() {
   yaw = (((((int)msb_yaw) << 8) | lsb_yaw));
   yaw /= 16;
   yaw = yaw - yaw_offset;
-  if (yaw < 0) yaw += 360;
+  if (yaw < 0)
+    yaw += 360;
   Serial.println(yaw);
   return yaw;
 
@@ -172,8 +150,35 @@ double get_yaw() {
   //  Serial.println(yaw);
 }
 
+void read_feed() {
+  if (tz == LOW) {
+    tz = !digitalRead(pin_tz);
+  }
+  load = !digitalRead(pin_load);
+}
 
-
-
-
-
+void debug() {
+  Serial.println(
+      "1. Motors Test\n2.Optical Sensor Test\n3.BN0 Test\n4.Sunfounder "
+      "Test\n5.Encoder Test\n6.Launcher Motor Test");
+  Serial.println("Enter Option::");
+  int opt = Serial.parseInt();
+  switch (opt) {
+    case 1:
+      write_motors(+27, +300, -300);
+      delay(500);
+      stop_all();
+      break;
+    case 2:
+     
+      break;
+    case 3:
+      break;
+    case 4:
+      break;
+    case 5:
+      break;
+    case 6:
+      break;
+  }
+}
