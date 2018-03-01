@@ -14,7 +14,7 @@
 #define ENCODER_SAMPLE_TIME 30
 #define adr 0x29
 
-constexpr int FAST_SPEED = 500, SLOW_SPEED = 140;
+constexpr int FAST_SPEED = 700, SLOW_SPEED = 140;
 void backward_enc(int, int, int, bool fence = false);
 void forward_enc(int, int, int, int offset = 1500);
 
@@ -24,7 +24,7 @@ constexpr double ki = 10;
 constexpr int BRAKE = INT_MIN;
 
 constexpr double ALPHA = 0.9;
-int LINE_THRES = 78;
+int LINE_THRES = 95;
 //int LINE_THRES = 150;
 
 // ------------------------------ PINS -------------------
@@ -73,9 +73,9 @@ int dphoto_forw = 0;
 int dphoto_bac = 0;
 int dphoto_load = 0;
 
-int fwm[3] = {77, 164, 188};
-int bwm[3] = {77  , 120, 164};
-int del[3] = {1, 1, 1000};
+int fwm[3] = {95, 160, 188};
+int bwm[3] = {100  , 160, 164};
+int del[3] = {100, 2000, 1000};
 
 //int fwm[3] = {20, 20, 20};
 //int bwm[3] = {20, 20, 20};
@@ -92,6 +92,7 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   Serial2.begin(9600);
+
 
   bno_initialize();
 
@@ -117,21 +118,37 @@ void setup() {
   //  bno.setExtCrystalUse(true);
   reset_encoder();
   Serial.println("Starting bot...");
+  photos();
+  delay(200);
+  while(dphoto_bac==LOW){
+    launch_ccw(15);
+    photos();
+  }
+  brake_free();
+  
+//  while(1){
+//    if(Serial.available()){
+//      char cj=Serial.read();
+//      if(cj=='r')
+//      reset_encoder();
+//    }
+//    Serial.println(encoder());
+//  }
 }
 
 void loop() {
-
-
   if (flag == true) {
     flag = false;
     startup();
   }
   read_feed();
   if (tz == LOW && load == HIGH && flag1 == true) {
+    delay(3000);
     tz1();
   }
 
   if (tz == HIGH && load == HIGH && flag2 == true) {
+    delay(5000);
     // digitalWrite(99, HIGH);
     flag1 = false;
     flag2 = false;
@@ -140,12 +157,14 @@ void loop() {
   }
 
   if (tz == HIGH && load == HIGH && flag2 == false) {
+    delay(3000);
     // digitalWrite(tz_led_digital, HIGH);
     tz2();
     // digitalWrite(99, LOW);
   }
 
   if (tz == LOW && load == HIGH && flag1 == false) {
+    delay(3000);
     tz3();
   }
 }

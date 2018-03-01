@@ -33,6 +33,7 @@ void photos() {
 }
 
 void launch(int i) {
+  delay(1000);
   //  digitalWrite(99, 0);
   photos();
   digitalWrite(8, HIGH);
@@ -54,7 +55,7 @@ void launch(int i) {
 
       while (dphoto_bac == LOW) {
         Serial.println("backing");
-        launch_ccw(10);
+        launch_ccw(20);
         delay(20);
         brake_lock();
         photos();
@@ -64,7 +65,6 @@ void launch(int i) {
   }
 
   Serial.println("out");
-  delay(3000);
 
   digitalWrite(8, LOW);
    digitalWrite(9, LOW);

@@ -103,9 +103,12 @@ long encoder() {
     }
     enc_last = S * neg;
     enc_time = millis();
+    Serial.println("[encoder:]  " + String(enc_last));
     return enc_last;
-  } else
+  } else {
+    Serial.println("[encoder:]  " + String(enc_last));
     return enc_last;
+  }
 }
 
 void reset_encoder() {
