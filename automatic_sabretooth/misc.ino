@@ -57,13 +57,15 @@ double angle_diff(double a, double b) {
 //        return -err;
 //}
 
+#define uchar unsigned char
+uchar t;
+uchar data[16];
 double line() {
-  unsigned char data[16];
-  unsigned char t;
-  Wire.requestFrom(9, 16);  // request 16 bytes from slave device #9
-  while (Wire.available())  // slave may send less than requested
+
+   Wire.requestFrom(9, 16);    // request 16 bytes from slave device #9
+  while (Wire.available())   // slave may send less than requested
   {
-    data[t] = Wire.read();  // receive a byte as character
+    data[t] = Wire.read(); // receive a byte as character
     if (t < 15)
       t++;
     else
@@ -71,16 +73,19 @@ double line() {
   }
 
   double f = 0;
-
-  for (int i = 0; i <= 14; i += 2)
+ 
+  for (int i = 0; i <= 14; i+= 2)
     f += data[i];
 
+  Serial.println(f / 8.0, 2);
+
   f /= 8.0;
-  Serial.println("[line] " + String(f));
+
+  Serial.print("[line: ]"); Serial.println(f);
   return f;
 }
 
-long long enc_time = millis();
+long long enc_time = 0;
 long enc_last = 0;
 
 long encoder() {

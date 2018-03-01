@@ -70,21 +70,26 @@ void forward(int speed, int enc, int target) {
   mkpid(kp, ki, kd);
   reset_encoder();
 
+
   while (enc - encoder() > 800) {
     input = get_yaw();
     myPID.Compute();
-
     write_motors(BRAKE, speed, speed + output);
+    Serial.print("encoder: ");
+    Serial.println(encoder());
   }
 
   speed = 200;
   mkpid(kp, ki, kd);
 
+
   while (line() < LINE_THRES) {
+
     input = get_yaw();
     myPID.Compute();
     write_motors(BRAKE, speed, speed + output);
   }
+
   Serial.println("Stop");
   stop_all();
 }
@@ -94,16 +99,23 @@ void backward(int speed, int enc, int target) {
   mkpid(kp, ki, kd);
   reset_encoder();
 
+  Serial.print("encoder: ");
+  Serial.println(encoder());
+
   while (abs(enc - encoder()) > 800) {
     input = get_yaw();
     myPID.Compute();
     write_motors(BRAKE, -speed, -speed + output);
+     Serial.print("encoder: ");
+    Serial.println(encoder());
   }
 
   speed = SLOW_SPEED;
   mkpid(kp, ki, kd);
 
+
   while (line() < LINE_THRES) {
+
     input = get_yaw();
     myPID.Compute();
     write_motors(BRAKE, -speed, -speed + output);
@@ -117,6 +129,8 @@ void backward_enc(int speed, int enc, int target, bool fence = false) {
   setpoint = target;
   mkpid(kp, ki, kd);
   reset_encoder();
+
+
   long long start = millis();
   while (abs(enc - encoder()) > 1500) {
     input = get_yaw();
@@ -124,6 +138,8 @@ void backward_enc(int speed, int enc, int target, bool fence = false) {
     write_motors(BRAKE, -speed, -speed + output);
     if (fence && (millis() - start) > 4000)
       break;
+    Serial.print("encoder: ");
+    Serial.println(encoder());
   }
 
   speed = SLOW_SPEED;
@@ -135,6 +151,7 @@ void backward_enc(int speed, int enc, int target, bool fence = false) {
     write_motors(BRAKE, -speed, -speed + output);
     if (fence && (millis() - start) > 4000)
       break;
+    Serial.println(encoder());
   }
   if (fence) {
     stop_all();

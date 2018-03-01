@@ -431,7 +431,7 @@ void backward_enc(int speed, int enc, int target, bool fence = false) {
 void tz1() {
   // BLUE -->
   {
-    backward_enc(FAST_SPEED, -5000, 90); // TZ1
+    backward_enc(FAST_SPEED, -5150, 90); // TZ1
     Serial.println("BK:5000");
     delay(500);
     rotate_to_angle(0, CCW);
@@ -440,7 +440,7 @@ void tz1() {
     backward_enc(250, -2100, 0, true); // FENCE
     Serial.println("BK:2100::FENCE");
     delay(1000);
-    forward(200, 1500, 0); // TZ1
+    forward(200, 1500, 0); // TZ1 // ?
     Serial.println("FW:1500::LINE");
     delay(200);
     rotate_to_angle(90, CW);
