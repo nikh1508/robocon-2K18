@@ -73,9 +73,9 @@ int dphoto_forw = 0;
 int dphoto_bac = 0;
 int dphoto_load = 0;
 
-int fwm[3] = {95, 160, 188};
-int bwm[3] = {100  , 160, 164};
-int del[3] = {100, 2000, 1000};
+int fwm[3] = {80, 125, 177};
+int bwm[3] = {80  , 125, 177};
+int del[3] = {1, 3000, 3000};
 
 //int fwm[3] = {20, 20, 20};
 //int bwm[3] = {20, 20, 20};
