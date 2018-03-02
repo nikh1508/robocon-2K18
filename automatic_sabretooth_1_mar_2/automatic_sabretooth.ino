@@ -73,9 +73,9 @@ int dphoto_forw = 0;
 int dphoto_bac = 0;
 int dphoto_load = 0;
 
-int fwm[3] = {95, 160, 188};
-int bwm[3] = {100  , 160, 164};
-int del[3] = {100, 2000, 1000};
+int fwm[3] = {95, 164, 188};
+int bwm[3] = {100  , 120, 164};
+int del[3] = {100, 1, 1000};
 
 //int fwm[3] = {20, 20, 20};
 //int bwm[3] = {20, 20, 20};
@@ -92,7 +92,6 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   Serial2.begin(9600);
-
 
   bno_initialize();
 
@@ -120,13 +119,16 @@ void setup() {
   Serial.println("Starting bot...");
   photos();
   delay(200);
-  while(dphoto_bac==LOW){
-    launch_ccw(15);
-    photos();
-  }
-  brake_lock();
-  delay(50);
+//  while(dphoto_bac==LOW){
+//    launch_ccw(20);
+//    photos();
+//  }
   brake_free();
+
+//  write_motors(+27, +300, -300);
+//  delay(700);
+//  stop_all();
+//  delay(100);
   
 //  while(1){
 //    if(Serial.available()){
@@ -139,6 +141,11 @@ void setup() {
 }
 
 void loop() {
+
+  rotate_to_angle(270, CCW);
+  STOP
+
+
   if (flag == true) {
     flag = false;
     startup();

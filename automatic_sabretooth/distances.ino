@@ -8,7 +8,7 @@ constexpr int A_TO_BLUE = 3417;
 // end startup
 
 //constexpr int BLUE_TO_TZ1 = 5012;
-constexpr int BLUE_TO_TZ1 = 5012 - 820;
+constexpr int BLUE_TO_TZ1 = 5012 - 820+310;
 
 //constexpr int TZ1_TO_FENCE = 2172;  // 2100 ?
 constexpr int TZ1_TO_FENCE = 2200;
