@@ -1,13 +1,6 @@
 void setup() {
   Serial.begin(9600);
   setup_launcher();
-//  delay(1000);
-//  while(!dphoto_forw)
-//  {
-//    photos();
-//    launch_ccw(20);
-//  }
-//  brake_free();
 }
 void setup_launcher()
 {
@@ -17,7 +10,7 @@ void setup_launcher()
   pinMode(photo_forw, INPUT);
   pinMode(photo_bac, INPUT);
  
-  pinMode(tz1,INPUT);
-  pinMode(tz2,INPUT);
-  pinMode(tz3,INPUT);
+  pinMode(shoot,INPUT);
+  pinMode(zone_pin1,INPUT);
+  pinMode(zone_pin2,INPUT);
 }
